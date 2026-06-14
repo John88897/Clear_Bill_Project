@@ -1,26 +1,39 @@
-import {staff} from '../models/data.js'
+import { staff } from '../models/data.js'
+import { pool } from '../dbConnection.js'
+import fs from 'fs';
 
-export const getAllStaffs = (req, res) =>{
-    res.status(200).json(staff);
-}
-export const getStaffById = (req, res) =>{
-    const id = Number(req.params.id);
-    if(!id){
-        return res.status(404).json({error: `id cannot be empty!`})
+export const getAllStaffs = async (req, res) => {
+    try {
+        const [rows] = await pool.query("select * from staffs");
+    } catch (err) {
+        console.log(`There is an error in the StaffController` + err.message);
+        return res.status(404).json({ error: err.message })
     }
-    const getId = staff.find((s) => id === s.id);
-    if(!getId){
-        return res.status(404).json({error: `cannot find staff with this id!`})
-    }
-    res.status(200).json(getId);
 }
-export const createStaff = (req, res)=>{
-    const {name, role, departmentId, hourlyRate, shift} = req.body;
-    if(!name || !role || !departmentId || !hourlyRate || !shift){
-        return res.stats(404).json({error: `each field cannot be empty!`})
+export const getStaffById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        if (!id) {
+            return res.status(400).json("Id must be provided!");
+        }
+        const [rows] = await pool.query("select * from staffs where staffID = ?", [id]);
+        if (rows.length === 0) {
+            return res.status(404).json({ error: `cannot find staff with this id: ${id}` })
+        }
+        return res.status(200).json(rows[0]);
+    } catch (error) {
+        console.log("There is an erorr in getStaffById: " , error.messgage)
+        return res.status(404).json({error: error.message})
+    }
+
+}
+export const createStaff = (req, res) => {
+    const { name, role, departmentId, hourlyRate, shift } = req.body;
+    if (!name || !role || !departmentId || !hourlyRate || !shift) {
+        return res.stats(404).json({ error: `each field cannot be empty!` })
     }
     const newStaff = {
-        id: (staff.length) +1,
+        id: (staff.length) + 1,
         name: name,
         role: role,
         departmentId: departmentId,
@@ -30,30 +43,30 @@ export const createStaff = (req, res)=>{
     staff.push(newStaff);
     res.status(201).json(`successfully added new staff!`)
 }
-export const updateStaff = (req, res) =>{
+export const updateStaff = (req, res) => {
     const id = Number(req.params.id);
-    const {name, role, departmentId, hourlyRate, shift} = req.body;
-    if(!id){
-        return res.status({error: `id must be provided!`})
+    const { name, role, departmentId, hourlyRate, shift } = req.body;
+    if (!id) {
+        return res.status({ error: `id must be provided!` })
     }
     const updated = staff.find((s) => id === s.id);
-    if(!updated){
-        return res.status(404).json({error: `cannot find the matching id!`})
+    if (!updated) {
+        return res.status(404).json({ error: `cannot find the matching id!` })
     }
-    if(Object.keys(req.body).length === 0){
-        return res.status(404).json({error: `atleast one field must be provided!`})
+    if (Object.keys(req.body).length === 0) {
+        return res.status(404).json({ error: `atleast one field must be provided!` })
     }
     Object.assign(updated, req.body);
     res.status(200).json(`successfully updated!`)
 }
 export const delStaffById = (req, res) => {
     const id = Number(req.params.id);
-    if(!id){
-        return res.status(404).json({error: `id must be provided!`})
+    if (!id) {
+        return res.status(404).json({ error: `id must be provided!` })
     }
     const delStaff = staff.findIndex((s) => s.id === id);
-    if(delStaff === -1){
-        return res.status(404).json({erorr: `cannot find the staff with this id!`})
+    if (delStaff === -1) {
+        return res.status(404).json({ erorr: `cannot find the staff with this id!` })
     }
     res.status(200).json(`successfully remove staff!`)
     staff.splice(delStaff, 1);
