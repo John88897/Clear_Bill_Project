@@ -1,5 +1,4 @@
 const express = require("express");
-const cors
 import express from 'express';
 import categoryRoutes from './routes/categoryRoutes.js';
 import departmentRoutes from './routes/departmentRoutes.js';

@@ -1,5 +1,6 @@
 import {medicines} from '../models/data.js'
-
+import { pool } from '../config/dbConnection.js';
+import fs from 'fs'
 export const getAllMedicines = (req, res) => {
      res.status(200).json(medicines);
 }

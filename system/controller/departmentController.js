@@ -1,5 +1,7 @@
-
 import { departments } from "../models/data.js";
+import { pool } from "../config/dbConnection.js";
+import fs from 'fs'
+
 export const getAllDepartments = (req, res) =>{
     res.status(200).json(departments);
 }
