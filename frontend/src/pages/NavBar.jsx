@@ -1,16 +1,16 @@
 import bill from '../assets/bill.png'
 import payment from '../assets/payment.png'
-import spp from '../assets/spp.png'
 import Header from './Header'
+import dash from '../assets/dash.png'
 import pf from '../assets/p.png'
 import { NavLink } from 'react-router-dom'
 
 function NavBar() {
     const navItems = [
-        { to: '/bills', icon: bill, label: 'Bill' },
-        { to: '/paymentHistory', icon: payment, label: 'Payment' },
-        { to: '/dashboard', icon: spp, label: 'Support' },
-        { to: '/profile', icon: pf, label: 'Profile' },
+        { to: '/patient/dashboard', icon: dash, label: 'Dashboard' },
+        { to: '/patient/bills', icon: bill, label: 'Bill' },
+        { to: '/patient/paymentHistory', icon: payment, label: 'Payment' },
+        { to: '/patient/profile', icon: pf, label: 'Profile' },
     ];
     return (
         <>

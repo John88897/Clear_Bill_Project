@@ -29,6 +29,12 @@ exports.getDashboard = async (req, res) => {
                 status: "Unpaid"
             }
         });
+        const unpaidAmount = await Bill.sum("total_amount", {
+    where: {
+        patient_id: req.params.id,
+        status: "Unpaid"
+    }
+});
 
         res.json({
             patient_id: patient.patient_id,
@@ -37,7 +43,8 @@ exports.getDashboard = async (req, res) => {
             address: patient.address,
             totalBills,
             paidBills,
-            unpaidBills
+            unpaidBills,
+            unpaidAmount
         });
 
     } catch (error) {

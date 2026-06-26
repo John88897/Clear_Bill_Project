@@ -30,7 +30,18 @@ console.log("Status:", response.status);
 
     alert('Login Successful!');
 
-    navigate('/dashboard');
+    if (data.user.role === "Patient") {
+        navigate("/patient/dashboard");
+    }
+    else if (data.user.role === "Receptionist") {
+        navigate("/receptionist/dashboard");
+    }
+    else if (data.user.role === "Cashier") {
+        navigate("/cashier/dashboard");
+    }
+    else if (data.user.role === "Admin") {
+        navigate("/admin/dashboard");
+    }
 
 } else {
     alert(data.message);

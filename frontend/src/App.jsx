@@ -18,10 +18,10 @@ function App() {
 
           {/* patient route */}
         <Route element={<RootLayout/>}>
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/bills' element={<Bills />} />
-          <Route path='/paymentHistory' element={<PaymentHistory />} />
-          <Route path='/profile' element={<Profile />} />
+          <Route path='/patient/dashboard' element={<Dashboard />} />
+          <Route path='/patient/bills' element={<Bills />} />
+          <Route path='/patient/paymentHistory' element={<PaymentHistory />} />
+          <Route path='/patient/profile' element={<Profile />} />
         </Route>
 
         
