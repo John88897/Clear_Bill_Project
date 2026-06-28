@@ -6,7 +6,8 @@ import Bills from './pages/patient/Bills.jsx';
 import PaymentHistory from './pages/patient/PaymentHistory.jsx';
 import Profile from './pages/patient/Profile.jsx'
 import BillDetail from './pages/patient/BillDetail.jsx';
-import RegisterPatient from './pages/RegisterPatient.jsx';
+import RegisterPatient from './pages/receptionist/registerPatient.jsx';
+import ReceptionistDashboard from './pages/receptionist/receptionistDashboard.jsx';
 import './App.css'
 import './index.css'
 
@@ -24,10 +25,14 @@ function App() {
           <Route path='/patient/bills' element={<Bills />} />
           <Route path='/patient/paymentHistory' element={<PaymentHistory />} />
           <Route path='/patient/profile' element={<Profile />} />
-          <Route path='/patient/bills/:id' element={<BillDetail/>} />
-          <Route path='/receptionist/:id/create' element={<RegisterPatient/>}></Route>
+          <Route path='/patient/bills/:id' element={<BillDetail />} />
         </Route>
 
+        {/* receptionist route*/}
+        <Route element={<RootLayout />}>
+          <Route path='/receptionist/dashboard' element={<ReceptionistDashboard />}></Route>
+          <Route path='/receptionist/dashboard/:id/create' element={<RegisterPatient />}></Route>
+        </Route>
 
       </Routes>
     </>
