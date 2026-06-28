@@ -17,19 +17,21 @@ function Dashboard() {
     }, []);
     return (
         <>
+        <div className="pb-20">
+
             <div className=" flex flex-col justify-center items-center">
-                <div className="justify-center items-center w-[95%]  border-1 border-gray-300 rounded-lg px-6 mt-6">
+                <div className=" justify-center items-center w-[95%]  border-1 border-gray-300 rounded-lg px-6 mt-6">
                     <div className=" flex flex-row justify-around   ">
-                        <div>
+                        <div className="pt-4">
                             <div>
-                                <h1 className="font-bold text-[20px]">Hello, {patient?.name}</h1>
+                                <h1 className="font-bold text-[20px] sm:text-[40px]">Hello, {patient?.name}</h1>
                             </div>
-                            <div>
-                                <p className="text-[12px]">Welcome to ClearBill Care </p>
-                                <p className="text-[12px]">Your supportive hospital billing partner.</p>
+                            <div className="mb-3">
+                                <p className="text-[12px] sm:text-[16px]">Welcome to ClearBill Care </p>
+                                <p className="text-[12px] sm:text-[16px]">Your supportive hospital billing partner.</p>
                             </div>
                         </div>
-                        <div className="w-30"><img src={hospital} alt="" /></div>
+                        <div className="w-30 mt-2 sm:w-60"><img src={hospital} alt="" /></div>
                     </div>
                 </div>
             </div>
@@ -96,45 +98,46 @@ function Dashboard() {
             </div>
             <div className="mt-6">
                 <div>
-                    <div className="flex  justify-around">
+                    <div className="  font-semibold flex  justify-around">
                         <h1>Recent Bills</h1>
-                        <a href='./bills'>View All</a>
+                        <a href='./bills' className="text-[#00668A] ">View All</a>
                     </div>
                     <div>
-                        <div>
-                            <div className="mt-6 border border-gray-300 rounded-lg p-4">
-                                <h2 className="font-semibold mb-3">
-                                    Latest Bill
-                                </h2>
+                        <div className="flex justify-center items-center">
+                            <div className="mt-6 border w-[95%] border-gray-300 rounded-lg p-4">
 
-                                {patient?.latestBill ? (
-                                    <>
-                                        <p>
-                                            Bill ID: {patient.latestBill.bill_id}
-                                        </p>
 
-                                        <p>
-                                            Date: {patient.latestBill.bill_date}
-                                        </p>
+                                <div>
+                                    {patient?.bills?.map((bill) => (
+                                        <div key={bill.bill_id} className="border border-slate-300 rounded-lg p-4 mb-3">
+                                            <div className="flex justify-between items-center">
+                                                <div>
+                                                    <p className="font-semibold">Bill #{bill.bill_id}</p>
+                                                    <p className="text-sm text-gray-500">{bill.bill_date}</p>
+                                                </div>
 
-                                        <p>
-                                            Amount: ${patient.latestBill.total_amount}
-                                        </p>
+                                                <span
+                                                    className={`px-3 py-1 rounded-full text-sm font-medium ${bill.status === "Paid"
+                                                            ? "bg-green-100 text-green-700"
+                                                            : "bg-red-100 text-red-700"
+                                                        }`}
+                                                >
+                                                    {bill.status}
+                                                </span>
+                                            </div>
 
-                                        <p>
-                                            Status: {patient.latestBill.status}
-                                        </p>
-                                    </>
-                                ) : (
-                                    <p>No bills found.</p>
-                                )}
+                                            <div className="mt-2">
+                                                <p className="font-bold text-lg">${bill.total_amount}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {/* </div> */}
-
+        </div>
         </>
     )
 }

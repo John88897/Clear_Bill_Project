@@ -5,6 +5,7 @@ import Dashboard from './pages/patient/Dashboard.jsx';
 import Bills from './pages/patient/Bills.jsx';
 import PaymentHistory from './pages/patient/PaymentHistory.jsx';
 import Profile from './pages/patient/Profile.jsx'
+import BillDetail from './pages/patient/BillDetail.jsx';
 import './App.css'
 import './index.css'
 
@@ -22,6 +23,7 @@ function App() {
           <Route path='/patient/bills' element={<Bills />} />
           <Route path='/patient/paymentHistory' element={<PaymentHistory />} />
           <Route path='/patient/profile' element={<Profile />} />
+          <Route path='/patient/bills/:id' element={<BillDetail/>} />
         </Route>
 
         

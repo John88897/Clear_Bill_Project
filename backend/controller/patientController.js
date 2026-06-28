@@ -12,30 +12,43 @@ exports.getDashboard = async (req, res) => {
 
         const totalBills = await Bill.count({
             where: {
-                patient_id: req.params.id
+                patient_id: patient.patient_id
             }
         });
 
         const paidBills = await Bill.count({
             where: {
-                patient_id: req.params.id,
+                patient_id: patient.patient_id,
                 status: "Paid"
             }
         });
 
         const unpaidBills = await Bill.count({
             where: {
-                patient_id: req.params.id,
+                patient_id: patient.patient_id,
                 status: "Unpaid"
             }
         });
         const unpaidAmount = await Bill.sum("total_amount", {
     where: {
-        patient_id: req.params.id,
+        patient_id: patient.patient_id,
         status: "Unpaid"
     }
+    
 });
-
+const bills = await Bill.findAll({
+    where: {
+        patient_id: patient.patient_id
+    },
+    order: [["bill_date", "DESC"]]
+});
+console.log("User ID:", req.params.id);
+console.log("Patient:", patient);
+console.log("Patient ID:", patient.patient_id);
+console.log("Total Bills:", totalBills);
+console.log("Paid Bills:", paidBills);
+console.log("Unpaid Bills:", unpaidBills);
+console.log("Unpaid Amount:", unpaidAmount);
         res.json({
             patient_id: patient.patient_id,
             name: patient.User.name,
@@ -44,7 +57,31 @@ exports.getDashboard = async (req, res) => {
             totalBills,
             paidBills,
             unpaidBills,
-            unpaidAmount
+            unpaidAmount,
+            bills
+        });
+        
+
+    } catch (error) {
+        res.status(500).json(error);
+    }
+};
+
+exports.getProfile = async (req, res) => {
+    try {
+        const patient = await Patient.findOne({
+            where: { user_id: req.params.id },
+            include: [{ model: User, attributes: ["name", "email"] }]
+        });
+
+        if (!patient) return res.status(404).json({ message: "Patient not found" });
+
+        res.json({
+            name: patient.User.name,
+            email: patient.User.email,
+            gender: patient.gender,
+            phone: patient.phone,
+            address: patient.address,
         });
 
     } catch (error) {
