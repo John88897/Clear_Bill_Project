@@ -13,7 +13,7 @@ exports.getCashier = async (req, res) => {
         }
         res.json(cashier);
     } catch (error) {
-        console.log("There is an error in cashier" + error);
+        console.log("There is an error in cashierController" + error);
         res.status(500).json(error);
     }
 };  

@@ -11,6 +11,7 @@ function ReceptionistDashboard() {
     const [showRegister, setShowRegister] = useState(false)
 
     const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const navigate  = useNavigate();
     useEffect(() => {
         console.log("user id is :", user.id);
         if (!user.id) {
@@ -24,7 +25,6 @@ function ReceptionistDashboard() {
             }
             )
             .then((data) => {
-                // console.timeEnd("fetch")
                 setReceptionist(data);
                 setLoading(false);
             }).catch((error) => {
@@ -34,7 +34,7 @@ function ReceptionistDashboard() {
             });
     }, []);
     if (loading) return <h1>Loading...</h1>;
-    if (error) return <h1>Error: {error}</h1>;
+    if (error) return <h1>Error: {error.message}</h1>;
     if (showRegister) return <RegisterPatient />;
     return (
         <>
