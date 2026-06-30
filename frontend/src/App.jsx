@@ -8,6 +8,8 @@ import Profile from './pages/patient/Profile.jsx'
 import BillDetail from './pages/patient/BillDetail.jsx';
 import RegisterPatient from './pages/receptionist/registerPatient.jsx';
 import ReceptionistDashboard from './pages/receptionist/receptionistDashboard.jsx';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminUsers from './pages/admin/AdminUsers.jsx';
 import './App.css'
 import './index.css'
 
@@ -34,6 +36,9 @@ function App() {
           <Route path='/receptionist/dashboard/:id/create' element={<RegisterPatient />}></Route>
         </Route>
 
+        {/* admin route */}
+        <Route path='/admin/dashboard' element={<AdminDashboard />} />
+        <Route path='/admin/users' element={<AdminUsers />} />
       </Routes>
     </>
   )
