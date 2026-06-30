@@ -14,7 +14,8 @@ const User = sequelize.define("User", {
         "Admin",
         "Cashier",
         "Receptionist",
-        "Patient"
+        "Patient",
+        "Doctor"
     )
 },{
     tableName: "users",
