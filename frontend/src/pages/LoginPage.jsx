@@ -39,6 +39,9 @@ console.log("Status:", response.status);
     else if (data.user.role === "Cashier") {
         navigate("/cashier/dashboard");
     }
+    else if (data.user.role === "Doctor") {
+        navigate("/doctor/dashboard");
+    }
     else if (data.user.role === "Admin") {
         navigate("/admin/dashboard");
     }

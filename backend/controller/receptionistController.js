@@ -6,7 +6,7 @@ exports.getReceptionist = async (req, res) => {
 
         const receptionist = await User.findOne({
             where: {
-                user_id: req.params.id,
+                user_id: req.params.id
             }
         })
         if (!receptionist) {
@@ -19,16 +19,30 @@ exports.getReceptionist = async (req, res) => {
     }
 };
 exports.createPatient = async (req, res) => {
+   
     try {
-        const {name, email, password} = req.body;
-        if(!name || !email || !password){
+        const { name, email, password, phone, gender, address, role } = req.body;
+        if ( !gender || !address || !name || !email || !password) {
             return res.status(400).json("All field must be provided!");
         }
-       const newPatient =  await User.create({name, email, password, role: 'Patient'});
-       return res.status(201).json({message: `successfully created new Patient`, data: newPatient})
+        const newUserPatient = await User.create({
+            name: name,
+            email: email,
+            password: password,
+            role: 'Patient' //defining the default role to be Patient as soon as it is being created
+        });
+        console.log("new user id:", newUserPatient.user_id); 
+        const newPatient = await Patient.create(
+            {
+            user_id: newUserPatient.user_id,
+            gender: gender,
+            // phone: phone,
+            address: address,
+            });
+         res.status(201).json({ message: `successfully created new Patient`, data: newPatient })
     } catch (error) {
         console.log(`There is an error inside receptionistController: ${error}`)
-        return res.status(500).json({error: error.message}
+        return res.status(500).json({ error: error.message }
         )
     }
 }

@@ -11,6 +11,7 @@
     "nodemon": "^3.1.14",
     "react-is": "^19.2.7",
     "recharts": "^3.9.0",
+    "react-dom": "^19.2.7",
     "sequelize": "^6.37.8"
   }
 }

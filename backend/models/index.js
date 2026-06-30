@@ -10,6 +10,11 @@ User.hasOne(Patient, {
     foreignKey: "user_id"
 });
 
+//Doctor can input many service
+User.hasMany(Service, {
+    foreignKey: "user_id"
+});
+
 Patient.belongsTo(User, {
     foreignKey: "user_id"
 });

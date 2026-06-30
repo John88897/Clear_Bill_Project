@@ -24,4 +24,4 @@ const Service = sequelize.define("Service", {
         timestamps: false
     });
 
-    module.exports = Service;
+    module.exports = Service; 

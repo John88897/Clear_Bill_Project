@@ -1,31 +1,26 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-function RegisterPatient() {
-  const [name, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // const [phone, setPhone] = useState("")
-  const [gender, setGender] = useState("");
-  const [address, setAddress] = useState("");
+function InputService() {
+  const [service_name, setServiceName] = useState("");
+  const [description, setDescription] = useState("");
+  const [cost, setCost] = useState("");
 
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [loading, setLoading] = useState(true);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+  console.log(user);
   const navigate = useNavigate();
   useEffect(() => {
-    console.log("user id is :", user.id);
+    console.log("user id is: " + user.id);
     if (!user.id) {
       navigate("/login");
       return;
     }
-    fetch(`http://localhost:5000/api/receptionists/${user.id}`)
+    fetch(`http://localhost:5000/api/doctors/${user.id}`)
       .then((res) => {
         return res.json();
       })
-      .then((data) => {
-        console.log(data);
+      .then(() => {
         setLoading(false);
       })
       .catch((error) => {
@@ -35,40 +30,31 @@ function RegisterPatient() {
       });
   }, []);
 
-  async function handleCreatePatient() {
+  async function handleInputService() {
     try {
-      const newPatient = await fetch(
-        `http://localhost:5000/api/receptionists/${user.id}/create`,
+      const newService = await fetch(
+        `http://localhost:5000/api/doctors/${user.id}/input`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_id: user.id,
-            gender,
-            address,
-            name,
-            email,
-            password,
-          }),
+          body: JSON.stringify({ service_name, description, cost }),
         },
       );
-      const data = await newPatient.json();
-
-      if (!newPatient.ok) {
-        setError(data.error);
-        window.alert("Already exisiting patient!");
+      const data = await newService.json();
+      if (!newService.ok) {
+        setError(data.message);
         return;
       }
-      alert("successfully register patient" + JSON.stringify(data));
-      navigate("/receptionist/dashboard");
+      alert("successfully inserted service" + JSON.stringify(data))
+      navigate('/doctor/dashboard')
     } catch (error) {
-      console.log("There is an error inside registerPatient" + error);
-      console.log(error.message);
+      console.log("There is an error in generateService" + error.message);
       setError(error.message);
     }
   }
+
   if (loading) {
-    return <h1>Loading ...</h1>;
+    return <div>Loading ...</div>;
   }
   if (error) {
     return (
@@ -78,8 +64,7 @@ function RegisterPatient() {
           <button
             type="button"
             onClick={() => {
-              setError(null);
-              navigate("/receptionist/dashboard");
+              {setError(null); navigate('/doctor/dashboard')};
             }}
           >
             Return to Dashboard
@@ -91,46 +76,33 @@ function RegisterPatient() {
   return (
     <>
       <h3 className="flex justify-center text-3xl mt-[3.5em] font-bold ">
-        Create Patient
+        Provided Service
       </h3>
 
       <div className="flex ">
         <div className="mt-[4.5em] ml-[25%] grid justify-center py-10 w-1/3 border border-[#00668A] rounded-lg">
           <div className="flex flex-rows gap-[1em]  ">
             <div className="grid pr-[1em]">
-              <label>Name: </label>
-              <label>Email: </label>
-              <label>Password: </label>
-              {/* <label>Phone: </label> */}
-              <label>Gender: </label>
-              <label>Address: </label>
+              <label>Service_Name: </label>
+              <label>Description: </label>
+              <label>Cost: </label>
             </div>
 
             <div className="grid gap-4">
               <input
                 className=" border border-[#00668A] rounded-sm px-2 "
                 type="text"
-                onChange={(e) => setFullName(e.target.value)}
-              ></input>
-              <input
-                className=" border border-[#00668A] rounded-sm px-2"
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-              ></input>
-              <input
-                className=" border border-[#00668A] rounded-sm px-2"
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setServiceName(e.target.value)}
               ></input>
               <input
                 className=" border border-[#00668A] rounded-sm px-2"
                 type="text"
-                onChange={(e) => setGender(e.target.value)}
+                onChange={(e) => setDescription(e.target.value)}
               ></input>
               <input
                 className=" border border-[#00668A] rounded-sm px-2"
                 type="text"
-                onChange={(e) => setAddress(e.target.value)}
+                onChange={(e) => setCost(e.target.value)}
               ></input>
             </div>
           </div>
@@ -138,15 +110,12 @@ function RegisterPatient() {
 
         <div className="mt-[6.5em] ml-[4em] text-center">
           <div className="border border-gray-700 rounded-md m-4 text-white bg-blue-500 hover:bg-blue-600 text-md py-1 hover:border-gray-500">
-            <button type="button" onClick={handleCreatePatient}>
-              Insert
+            <button type="button" onClick={handleInputService}>
+              Insert Service
             </button>
           </div>
           <div className="border border-gray-700 rounded-md m-4 px-2 text-white bg-orange-500 hover:bg-orange-600 text-md py-1 hover:border-gray-500">
-            <button
-              type="button"
-              onClick={() =>
-               {console.log("click");navigate("/receptionist/dashboard");}}>
+            <button type="button" onClick={() => navigate('/doctor/dashboard')}>
               Return to Dashboard
             </button>
           </div>
@@ -155,5 +124,4 @@ function RegisterPatient() {
     </>
   );
 }
-// }
-export default RegisterPatient;
+export default InputService;
