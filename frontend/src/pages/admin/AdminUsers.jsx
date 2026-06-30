@@ -4,7 +4,7 @@ import AdminLayout from "../../../layout/AdminLayout";
 function AdminUsers() {
     const [userList, setUserList] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    const [form, setForm] = useState({name: '', email: '', password: '', role: 'Patient'})
+    const [form, setForm] = useState({ name: '', email: '', password: '', role: 'Patient' })
     useEffect(() => {
         fetch('http://localhost:5000/api/admin/users')
             .then(res => res.json())
@@ -18,44 +18,45 @@ function AdminUsers() {
         setUserList(userList.filter(u => u.user_id !== id));
     };
 
-    const handleCreate = async() =>{
-        if(!form.name || !form.email || !form.password){
+    const handleCreate = async () => {
+        if (!form.name || !form.email || !form.password) {
             alert("Please fill all fields");
             return;
         }
         const res = await fetch('http://localhost:5000/api/admin/users', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(form)
         });
         const data = await res.json();
-    
+
         if (res.ok) {
             setUserList([...userList, data]);
-            setForm({name: '', email: '', password:'', role:'Patient'});
+            setForm({ name: '', email: '', password: '', role: 'Patient' });
             setShowForm(false);
-        }else{
+        } else {
             alert(data.message);
         }
     };
 
     const roleColor = (role) => {
-        switch (role) {
-            case 'Admin': return 'bg-purple-100 text-purple-700';
-            case 'Patient': return 'bg-cyan-100 text-cyan-700';
-            case 'Cashier': return 'bg-green-100 text-green-700';
-            case 'Receptionist': return 'bg-orange-100 text-orange-700';
-            default: return 'bg-gray-100 text-gray-700';
-        }
-    };
+    switch (role) {
+        case 'Admin': return 'bg-purple-100 text-purple-700';
+        case 'Patient': return 'bg-cyan-100 text-cyan-700';
+        case 'Cashier': return 'bg-green-100 text-green-700';
+        case 'Receptionist': return 'bg-orange-100 text-orange-700';
+        case 'Doctor': return 'bg-blue-100 text-blue-700';
+        default: return 'bg-gray-100 text-gray-700';
+    }
+};
 
     return (
         <AdminLayout>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">User</h1>
-                <button 
-                onClick={() => setShowForm(!showForm)}
-                className="bg-cyan-500 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                <button
+                    onClick={() => setShowForm(!showForm)}
+                    className="bg-cyan-500 text-white px-4 py-2 rounded-lg text-sm font-medium">
                     + Add User
                 </button>
             </div>
@@ -66,48 +67,49 @@ function AdminUsers() {
                     <h2 className="font-semibold mb-3">New User</h2>
                     <div className="grid grid-cols-4 gap-3">
                         <input type="text"
-                        placeholder="Name"
-                        value={form.name}
-                        onChange={e => setForm ({...form, name: e.target.value})}
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                            placeholder="Name"
+                            value={form.name}
+                            onChange={e => setForm({ ...form, name: e.target.value })}
+                            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
                         />
                         <input type="text"
-                        placeholder="Email"
-                        value={form.email}
-                        onChange={e => setForm ({...form, email: e.target.value})}
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                            placeholder="Email"
+                            value={form.email}
+                            onChange={e => setForm({ ...form, email: e.target.value })}
+                            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
                         />
                         <input type="text"
-                        placeholder="password"
-                        value={form.password}
-                        onChange={e => setForm ({...form, password: e.target.value})}
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                            placeholder="password"
+                            value={form.password}
+                            onChange={e => setForm({ ...form, password: e.target.value })}
+                            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
                         />
                         <select
-                        value={form.role}
-                        onChange={e => setForm({...form, role: e.target.value})}
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                            value={form.role}
+                            onChange={e => setForm({ ...form, role: e.target.value })}
+                            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
                         >
                             <option value="Patient">Patient</option>
                             <option value="Cashier">Cashier</option>
                             <option value="Receptionist">Receptionist</option>
+                            <option value="Doctor">Doctor</option>
                             <option value="Admin">Admin</option>
                         </select>
                     </div>
-                        <div className="flex gap-2 mt-3">
-                            <button
+                    <div className="flex gap-2 mt-3">
+                        <button
                             onClick={handleCreate}
                             className="bg-cyan-500 text-white px-4 py-2 rounded-lg text-sm font-medium"
-                            >
-                                Save
-                            </button>
-                            <button 
+                        >
+                            Save
+                        </button>
+                        <button
                             onClick={() => setShowForm(false)}
                             className="border border-gray-300 text-gray-500 px-4 py-2 rounded-lg text-sm"
-                            >
-                                Cancel
-                            </button>
-                        </div>
+                        >
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             )}
 
@@ -135,8 +137,8 @@ function AdminUsers() {
                                 </td>
                                 <td className="px-4 py-3">
                                     <button
-                                    onClick={() => handleDelete(user.user_id)}
-                                    className="text-red-500 hover:text-red-700 font-medium
+                                        onClick={() => handleDelete(user.user_id)}
+                                        className="text-red-500 hover:text-red-700 font-medium
                                     text-xs border border-red-200 px-2 py-1 rounded-lg"
                                     >
                                         Delete
