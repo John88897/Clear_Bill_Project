@@ -138,7 +138,7 @@ function InputService() {
         <div className="mt-[6.5em] ml-[4em] text-center">
           <div className="border border-gray-700 rounded-md m-4 text-white bg-blue-500 hover:bg-blue-600 text-md py-1 hover:border-gray-500">
             <button type="button" onClick={handleInputService}>
-              Insert Service
+              Send to Cashier
             </button>
           </div>
           <div className="border border-gray-700 rounded-md m-4 px-2 text-white bg-orange-500 hover:bg-orange-600 text-md py-1 hover:border-gray-500">
