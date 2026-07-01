@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 function InputService() {
-  const [service_name, setServiceName] = useState("");
-  const [description, setDescription] = useState("");
-  const [cost, setCost] = useState("");
   const [patientId, setPatientId] = useState("");
-
+  const [service_id, setServiceId] = useState("");
+  const [serviceInfo, setServiceInfo] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -31,6 +29,28 @@ function InputService() {
       });
   }, []);
 
+  useEffect(() => {
+  if (!service_id) {
+    return;
+  }
+
+  async function showService() {
+    try {
+      const res = await fetch(`http://localhost:5000/api/services/${service_id}`);
+      if (!res.ok) {
+        setServiceInfo(null);
+        return;
+      }
+      const service = await res.json();
+      setServiceInfo(service);
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
+  }
+
+  showService();
+}, [service_id]);
   async function handleInputService() {
     try {
       const result = await fetch(
@@ -40,9 +60,7 @@ function InputService() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             patientId: parseInt(patientId),
-            service_name: service_name,
-            description: description,
-            cost: parseFloat(cost),
+            service_id: parseInt(service_id),
           }),
         },
       );
@@ -95,9 +113,7 @@ function InputService() {
           <div className="flex flex-rows gap-[1em]  ">
             <div className="grid pr-[1em]">
               <label>Patient ID: </label>
-              <label>Service_Name: </label>
-              <label>Description: </label>
-              <label>Cost: </label>
+              <label>Service_ID: </label>
             </div>
 
             <div className="grid gap-4">
@@ -109,18 +125,12 @@ function InputService() {
               <input
                 className=" border border-[#00668A] rounded-sm px-2 "
                 type="text"
-                onChange={(e) => setServiceName(e.target.value)}
+                onChange={(e) => setServiceId(e.target.value)}
               ></input>
-              <input
-                className=" border border-[#00668A] rounded-sm px-2"
-                type="text"
-                onChange={(e) => setDescription(e.target.value)}
-              ></input>
-              <input
-                className=" border border-[#00668A] rounded-sm px-2"
-                type="text"
-                onChange={(e) => setCost(e.target.value)}
-              ></input>
+              <div className="text-sm ">
+                Description of Serivce_ID number {service_id}:{" "}
+                {serviceInfo ? serviceInfo.service_name : ""}
+              </div>
             </div>
           </div>
         </div>
