@@ -1,7 +1,6 @@
-const { error } = require("cli");
 const jwt = require("jsonwebtoken");
 
-exports.verifyWebToken = (req, res, next) => {
+exports.verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (!token) {
@@ -19,8 +18,8 @@ exports.verifyAdmin = (req, res, next) => {
   exports.verifyWebToken(req, res, () => {
     if (req.user.role !== "Admin") {
       return res.status(403).json({ message: "Admin access only!" });
-      next();
     }
+    next();
   });
 };
 exports.verifyPatient = ( req, res, next) => {

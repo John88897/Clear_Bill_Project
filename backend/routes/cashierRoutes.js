@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { getCashier, generateBill } = require("../controller/cashierController");
 
-router.get("/:", getCashidier);
+router.get("/:", getCashier);
 router.get("/:id/genearateBill", generateBill);
 router.get("/:id/bill_id/", processPayment);
 
