@@ -20,22 +20,6 @@ const Service = sequelize.define(
     cost: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-    },
-    patient_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "patients",
-        key: "patient_id", 
-      },
-    },
-    doctor_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references:{
-            model: "users",
-            key: "user_id"
-        }
     }
   },
   {

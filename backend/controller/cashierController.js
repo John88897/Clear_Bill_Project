@@ -4,9 +4,10 @@ exports.getCashier = async (req, res) => {
 
     try {
 
-        const cashier = await User.findOne({
+        const cashier = await User.findAll({
             where: {
-                cashier_id: req.params.id,
+                user_id: req.params.id,
+                role: "Cashier"
             }
         })
         if(!cashier){

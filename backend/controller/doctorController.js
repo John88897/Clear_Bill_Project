@@ -2,9 +2,8 @@ const { where } = require("sequelize");
 const { Patient, User, Service } = require("../models");
 exports.getDoctor = async (req, res) => {
   try {
-    const doctor = await User.findOne({
+    const doctor = await User.findAll({
       where: {
-        user_id: req.params.id,
         role: "Doctor",
       },
     });
@@ -27,8 +26,6 @@ exports.findService = async (req, res) => {
     const findPatient = await Patient.findOne({
       where: {
         patient_id: patientId,
-        service_id: serviceId,
-        doctor_id: doctorId,
       },
     });
     if (!findPatient) {
@@ -37,9 +34,11 @@ exports.findService = async (req, res) => {
         .json({ error: `cannot find the patient with this id!` });
     }
     const findService = await Service.findOne({
-      where: { patient_id: patientId },
+      where: { 
+      patient_id: patientId ,
       service_id: serviceId,
       doctor_id: doctorId,
+      }
     });
     if (!findService) {
       return res.status(404).json({ error: `service can not be found` });

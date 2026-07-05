@@ -1,4 +1,3 @@
-const { error } = require("cli");
 const jwt = require("jsonwebtoken");
 require('dotenv').config()
 
@@ -47,11 +46,13 @@ exports.verifyReceptionist = ( req, res, next) => {
         if(req.user.role !== 'Receptionist'){
         return res.status(403).json({message: 'Receptionist access only'})
         }
-        const email = req.body.email;
-        const receptionist = {email: email}
         next();
 })
 }
+
+
+
+
 exports.verifyCashier = ( req, res, next) => {
     exports.verifyWebToken(req, res, () => {
         if(req.user.role !== 'Cashier'){
