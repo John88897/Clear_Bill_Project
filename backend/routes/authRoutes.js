@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { login } = require("../controller/authController");
-
-router.post("/login", login);
+// const { verifyWebToken } = require('../middleware/authMiddleware');// const verifyLogin = require('../middleware/authMiddleware')
+router.post("/login",  login);
 
 module.exports = router;

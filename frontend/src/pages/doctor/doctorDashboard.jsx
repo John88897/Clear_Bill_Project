@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import hospital from "../../assets/hospital.png";
 // import LoginPage from "../LoginPage";
+import { authFetch } from "../../utils/authFetch";
 function DoctorDashboard() {
   const [userDoctor, setDoctor] = useState(null);
   const [error, setError] = useState(null);
@@ -13,9 +14,14 @@ function DoctorDashboard() {
     if (!user.id) {
       return;
     }
-    fetch(`http://localhost:5000/api/doctors/${user.id}`)
+    const token = localStorage.getItem('token');
+    authFetch(`http://localhost:5000/api/doctors/${user.id}`)
       .then((res) => {
         return res.json();
+        if (!res.ok) {
+          throw new Error(data.message || 'Failed to load doctor');
+
+        }
       })
       .then((data) => {
         setDoctor(data);

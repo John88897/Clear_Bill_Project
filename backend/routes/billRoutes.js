@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { getPatientBills, getBillById } = require("../controller/billController");
-const {verifyToken} = require('../middleware/authMiddleware')
-
-router.get("/patient/:patientId",verifyToken, getPatientBills);
-router.get('/:id', verifyToken, getBillById);
+const { verifyWebToken } = require('../middleware/authMiddleware');
+router.get("/patient/:patientId",verifyWebToken, getPatientBills);
+router.get('/:id', verifyWebToken, getBillById);
 module.exports = router;

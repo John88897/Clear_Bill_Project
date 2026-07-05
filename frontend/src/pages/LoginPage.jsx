@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
-
+import { authFetch } from '../utils/authFetch';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -10,7 +10,7 @@ function LoginPage() {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/auth/login', {
+            const response = await authFetch('http://localhost:5000/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
