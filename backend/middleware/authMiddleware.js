@@ -1,5 +1,6 @@
 const { error } = require("cli");
 const jwt = require("jsonwebtoken");
+require('dotenv').config()
 
 exports.verifyWebToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -7,7 +8,7 @@ exports.verifyWebToken = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: "No token provided" });
   }
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: "Invalid or expired token" });
     }
@@ -19,14 +20,42 @@ exports.verifyAdmin = (req, res, next) => {
   exports.verifyWebToken(req, res, () => {
     if (req.user.role !== "Admin") {
       return res.status(403).json({ message: "Admin access only!" });
-      next();
     }
+    next();
   });
 };
 exports.verifyPatient = ( req, res, next) => {
     exports.verifyWebToken(req, res, () => {
         if(req.user.role !== 'Patient'){
         return res.status(403).json({message: 'Patient access only'})
+        }
+        next();
+    }
+)
+}
+exports.verifyDoctor = ( req, res, next) => {
+    exports.verifyWebToken(req, res, () => {
+        if(req.user.role !== 'Doctor'){
+        return res.status(403).json({message: 'Doctor access only'})
+        }
+        next();
+    }
+)
+}
+exports.verifyReceptionist = ( req, res, next) => {
+    exports.verifyWebToken(req, res, () => {
+        if(req.user.role !== 'Receptionist'){
+        return res.status(403).json({message: 'Receptionist access only'})
+        }
+        const email = req.body.email;
+        const receptionist = {email: email}
+        next();
+})
+}
+exports.verifyCashier = ( req, res, next) => {
+    exports.verifyWebToken(req, res, () => {
+        if(req.user.role !== 'Cashier'){
+        return res.status(403).json({message: 'Cashier access only'})
         }
         next();
     }

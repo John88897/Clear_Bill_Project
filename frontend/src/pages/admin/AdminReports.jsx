@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AdminLayout from "../../../layout/AdminLayout";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { authFetch } from "../../utils/authFetch";
 
 function AdminRevenue() {
     const [startDate, setStartDate] = useState("2026-01-01");
@@ -11,7 +12,7 @@ function AdminRevenue() {
     const fetchReport = async () => {
         setLoading(true);
         try {
-            const res = await fetch(
+            const res = await authFetch(
                 `http://localhost:5000/api/admin/reports?startDate=${startDate}&endDate=${endDate}`
             );
             const data = await res.json();

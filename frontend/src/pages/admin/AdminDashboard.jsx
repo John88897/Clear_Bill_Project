@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AdminLayout from "../../../layout/AdminLayout";
+import { authFetch } from "../../utils/authFetch";
 import { useEffect } from "react";
 import {PieChart, Pie, Cell, Legend, Tooltip} from 'recharts';
 import users from '../../assets/users.png'
@@ -12,7 +13,7 @@ function AdminDashboard() {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/admin/dashboard')
+        authFetch('http://localhost:5000/api/admin/dashboard')
         .then(res => res.json())
         .then(data => setStats(data))
         .catch(err => console.error(err));

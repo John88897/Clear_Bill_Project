@@ -45,7 +45,6 @@ function App() {
         <Route element={<RootLayout />}>
           <Route path='/doctor/dashboard' element={<DoctorDashboard />}></Route>
           <Route path='/doctor/input' element={<InputService />}></Route>
-          {/* <Route path='/doctor/service' element={<InputService />}></Route> */}
         </Route>
 
          {/* cashier route*/}

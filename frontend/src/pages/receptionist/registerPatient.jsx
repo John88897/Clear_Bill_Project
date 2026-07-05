@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { authFetch } from "../../utils/authFetch";
+
 function RegisterPatient() {
   const [name, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -17,9 +19,11 @@ function RegisterPatient() {
   useEffect(() => {
     console.log("user id is :", user.id);
     if (!user.id) {
+      setError("You must be logged in to access this page.");
+      setLoading(false);
       return;
     }
-    fetch(`http://localhost:5000/api/receptionists/${user.id}`)
+    authFetch(`http://localhost:5000/api/receptionists/${user.id}`)
       .then((res) => {
         return res.json();
       })
@@ -36,7 +40,7 @@ function RegisterPatient() {
 
   async function handleCreatePatient() {
     try {
-      const newPatient = await fetch(
+      const newPatient = await authFetch(
         `http://localhost:5000/api/receptionists/${user.id}/create`,
         {
           method: "POST",
@@ -144,8 +148,7 @@ function RegisterPatient() {
           <div className="border border-gray-700 rounded-md m-4 px-2 text-white bg-orange-500 hover:bg-orange-600 text-md py-1 hover:border-gray-500">
             <button
               type="button"
-              onClick={() =>
-               {console.log("click");navigate("/receptionist/dashboard");}}>
+              onClick={() => { console.log("click"); navigate("/receptionist/dashboard"); }}>
               Return to Dashboard
             </button>
           </div>

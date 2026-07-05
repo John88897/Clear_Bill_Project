@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { authFetch } from "../../utils/authFetch";
+
 function InputService() {
   const [patientId, setPatientId] = useState("");
   const [serviceId, setServiceId] = useState("");
@@ -10,11 +12,12 @@ function InputService() {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   console.log(user);
   useEffect(() => {
+    
     console.log("user id is: " + user.id);
     if (!user.id) {
       return;
     }
-    fetch(`http://localhost:5000/api/doctors/${user.id}`)
+    authFetch(`http://localhost:5000/api/doctors/${user.id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Doctor not found");
         return res.json();
@@ -36,7 +39,7 @@ function InputService() {
 
   async function showService() {
     try {
-      const res = await fetch(`http://localhost:5000/api/services/${serviceId}`);
+      const res = await authFetch(`http://localhost:5000/api/services/${serviceId}`);
       if (!res.ok) {
         setServiceInfo(null);
         return;
@@ -53,7 +56,7 @@ function InputService() {
 }, [serviceId]);
   async function handleInputService() {
     try {
-      const result = await fetch(
+      const result = await authFetch(
         `http://localhost:5000/api/doctors/${user.id}/input`,
         {
           method: "POST",

@@ -3,6 +3,8 @@ import { useState } from "react";
 import CashierDashboard from "./cashierDashboard";
 import  InputService from "../doctor/generateService";
 import { Navigate } from "react-router-dom";
+import { authFetch } from "../../utils/authFetch";
+
 function CreateBill() {
   // const [service, setService] = useState("");
   // const [total, setTotal] = useState(false);
@@ -23,7 +25,7 @@ function CreateBill() {
       Navigate("/login");
       return;
     } 
-    fetch(`http://localhost:5000/api/cashier/${user.id}`)
+    authFetch(`http://localhost:5000/api/cashier/${user.id}`)
       .then((res) => {
         return res.json();
       })
@@ -43,7 +45,7 @@ function CreateBill() {
   }
   async function HandleCreateBill() {
     try {
-      const newBill = await fetch(
+      const newBill = await authFetch(
         `http://localhost:5000/api/cashier/${user.id}/createBill`,
         {
           method: "POST",

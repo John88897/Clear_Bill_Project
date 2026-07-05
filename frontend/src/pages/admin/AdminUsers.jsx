@@ -1,20 +1,21 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "../../../layout/AdminLayout";
+import { authFetch } from "../../utils/authFetch";
 
 function AdminUsers() {
     const [userList, setUserList] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [form, setForm] = useState({ name: '', email: '', password: '', role: 'Patient' })
-    useEffect(() => {
-        fetch('http://localhost:5000/api/admin/users')
-            .then(res => res.json())
-            .then(data => setUserList(data))
-            .catch(err => console.error(err));
-    }, []);
+   useEffect(() => {
+    authFetch('http://localhost:5000/api/admin/users')
+        .then(res => res.json())
+        .then(data => setUserList(data.users || data))
+        .catch(err => console.error(err));
+}, []);
 
     const handleDelete = async (id) => {
         if (!confirm("Are you sure you want to delete this user?")) return;
-        await fetch(`http://localhost:5000/api/admin/users/${id}`, { method: 'DELETE' });
+        await authFetch(`http://localhost:5000/api/admin/users/${id}`, { method: 'DELETE' });
         setUserList(userList.filter(u => u.user_id !== id));
     };
 
@@ -23,7 +24,7 @@ function AdminUsers() {
             alert("Please fill all fields");
             return;
         }
-        const res = await fetch('http://localhost:5000/api/admin/users', {
+        const res = await authFetch('http://localhost:5000/api/admin/users', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(form)

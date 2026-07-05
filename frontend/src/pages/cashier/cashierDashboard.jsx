@@ -3,6 +3,7 @@ import hospital from '../../assets/hospital.png'
 // import LoginPage from "../LoginPage";
 import CreateBill from "./createBill";
 import { useNavigate } from "react-router-dom";
+import { authFetch } from "../../utils/authFetch";
 
 function CashierDashboard() {
     const [cashier, setCashier] = useState(null);
@@ -18,7 +19,7 @@ function CashierDashboard() {
             navigate("/login");
              return;
         }
-        fetch(`http://localhost:5000/api/receptionist/${user.id}`)
+        authFetch(`http://localhost:5000/api/receptionist/${user.id}`)
             .then((res) => {
                 return res.json()
             }
