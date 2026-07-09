@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import CashierDashboard from "./cashierDashboard";
-import  InputService from "../doctor/generateService";
+import InputService from "../doctor/generateService";
 import { Navigate } from "react-router-dom";
 import { authFetch } from "../../utils/authFetch";
 
@@ -11,8 +11,8 @@ function CreateBill() {
   const [status, setStatus] = useState("");
   const [patient_id, setPatientId] = useState("");
   const now = new Date();
-  const localTime = now.toLocaleTimeString(); 
-  const localDate = now.toLocaleDateString(); 
+  const localTime = now.toLocaleTimeString();
+  const localDate = now.toLocaleDateString();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,13 +24,13 @@ function CreateBill() {
     if (!user.id) {
       Navigate("/login");
       return;
-    } 
-    authFetch(`http://localhost:5000/api/cashier/${user.id}`)
+    }
+    authFetch(`http://localhost:5000/api/cashiers/${user.id}`)
       .then((res) => {
         return res.json();
       })
       .then((data) => {
-        console.log(data)
+        console.log(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -40,20 +40,20 @@ function CreateBill() {
       });
   }, []);
   // Sokha Cashier	cashier@clearbill.com	$2b$10$cashier123 this is cashier
-  async function getTotal() {
-
-  }
+  async function getTotal() {}
   async function HandleCreateBill() {
     try {
       const newBill = await authFetch(
-        `http://localhost:5000/api/cashier/${user.id}/createBill`,
+        `http://localhost:5000/api/cashiers/${user.id}/generateBill`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             user_id: user.id,
+            service_id: serviceId,
+            quantity: 1,
             patient_id,
-            bill_date: `${localTime} | ${localDate}`,
+            bill_date: now.toISOString().split("T")[0],
             total_amount: getTotal,
             status,
           }),
@@ -67,7 +67,6 @@ function CreateBill() {
         return;
       }
       setShowDashboard(true);
-      
 
       console.log("Status:", newBill.status);
       console.log("Response:", data);
@@ -75,8 +74,7 @@ function CreateBill() {
       console.log("Submitting:", {
         user_id: user.id,
         patient_id,
-        bill_date: `${localTime} | ${localDate}`,
-        // total,
+        bill_date: now.toISOString().split("T")[0],
         status,
       });
     } catch (error) {
@@ -118,18 +116,24 @@ function CreateBill() {
         <div className="mt-[4.5em] ml-[25%] grid justify-center py-10 w-1/3 border border-[#00668A] rounded-lg">
           <div className="flex flex-rows gap-[1em]  ">
             <div className="grid pr-[1em]">
-              <label>Services Used: <InputService/></label>
+              <label>
+                Services Used: <InputService />
+              </label>
               <label>Status: </label>
               <label>Patient_id: </label>
-              <label>Total:  </label>
+              <label>Total: </label>
               {/* <label>Address: </label> */}
             </div>
 
             <div className="grid gap-4">
-              <input className=" border border-[#00668A] rounded-sm px-2" type="password"
+              <input
+                className=" border border-[#00668A] rounded-sm px-2"
+                type="password"
                 onChange={(e) => setStatus(e.target.value)}
               ></input>
-              <input className=" border border-[#00668A] rounded-sm px-2 " type="tel"
+              <input
+                className=" border border-[#00668A] rounded-sm px-2 "
+                type="tel"
                 onChange={(e) => setPatientId(e.target.value)}
               ></input>
             </div>
@@ -138,13 +142,19 @@ function CreateBill() {
 
         <div className="mt-[6.5em] ml-[4em] text-center">
           <div className="border border-gray-700 rounded-md m-4 text-white bg-blue-500 hover:bg-blue-600 text-md py-1 hover:border-gray-500">
-            <button type="button" onClick={HandleCreateBill}>Generate Bill</button>
+            <button type="button" onClick={HandleCreateBill}>
+              Generate Bill
+            </button>
           </div>
           <div className="border border-gray-700 rounded-md m-4 text-white bg-blue-500 hover:bg-blue-600 text-md py-1 hover:border-gray-500">
-            <button type="button" onClick={getTotal}>Generate Bill</button>
+            <button type="button" onClick={getTotal}>
+              Generate Bill
+            </button>
           </div>
           <div className="border border-gray-700 rounded-md m-4 px-2 text-white bg-orange-500 hover:bg-orange-600 text-md py-1 hover:border-gray-500">
-            <button type="button" onClick={() => setShowDashboard(true)}>Return to Dashboard</button>
+            <button type="button" onClick={() => setShowDashboard(true)}>
+              Return to Dashboard
+            </button>
           </div>
         </div>
       </div>

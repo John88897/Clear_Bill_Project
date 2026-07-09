@@ -19,7 +19,7 @@ function CashierDashboard() {
             navigate("/login");
              return;
         }
-        authFetch(`http://localhost:5000/api/receptionist/${user.id}`)
+        authFetch(`http://localhost:5000/api/cashiers/${user.id}`)
             .then((res) => {
                 return res.json()
             }

@@ -64,6 +64,7 @@ function InputService() {
           body: JSON.stringify({
             patientId: parseInt(patientId),
             serviceId: parseInt(serviceId),
+            quantity: 1
           }),
         },
       );
@@ -79,6 +80,13 @@ function InputService() {
     } catch (error) {
       console.log("There is an error in generateService" + error.message);
       setError(error.message);
+    }
+  }
+  async function addOnService(){
+    try {
+      
+    } catch (error) {
+      
     }
   }
 
@@ -139,6 +147,11 @@ function InputService() {
         </div>
 
         <div className="mt-[6.5em] ml-[4em] text-center">
+            <div className="border border-gray-700 rounded-md m-4 text-white bg-blue-500 hover:bg-blue-600 text-md py-1 hover:border-gray-500">
+            <button type="button" onClick={addOnService}>
+              Add on service
+            </button>
+          </div>
           <div className="border border-gray-700 rounded-md m-4 text-white bg-blue-500 hover:bg-blue-600 text-md py-1 hover:border-gray-500">
             <button type="button" onClick={handleInputService}>
               Send to Cashier
