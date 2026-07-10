@@ -1,4 +1,4 @@
-const { Patient, User, Bill } = require("../models");
+const { Patient, User, Bill, Payment } = require("../models");
 
 exports.getDashboard = async (req, res) => {
     try {
