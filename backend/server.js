@@ -26,6 +26,9 @@ app.use("/api/receptionists", receptionistRoutes);
 app.use("/api/cashiers", cashierRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/doctors", doctorRoutes )
+app.get("/", (req, res) => {
+  res.send("ClearBill Backend API is running!");
+});
 sequelize.authenticate()
 .then(() => {
     console.log("Database Connected");
