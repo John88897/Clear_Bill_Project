@@ -9,7 +9,6 @@ function CashierDashboard() {
     const [cashier, setCashier] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [createBill, setCreateBill] = useState(false)
 
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const navigate  = useNavigate();
@@ -35,7 +34,6 @@ function CashierDashboard() {
     }, []);
     if (loading) return <h1>Loading...</h1>;
     if (error) return <h1>Error: {error.message}</h1>;
-    if (createBill) return <CreateBill/>;
     return (
         <>
             <div className="flex justify-center min-h-screen pb-[10em]">
@@ -49,7 +47,7 @@ function CashierDashboard() {
                                 </div>
                                 <div className="mt-5 p-6">
                                     <div className="text-center bg-blue-[900] border border-gray-300 rounded-lg py-5 text-lg font-semibold mt-[1em] hover:text-indigo-700 hover:bg-[#E5E4E2]   ">
-                                        <button onClick={() => setCreateBill(true)}>Click here to generate bill </button>
+                                        <button onClick={() => navigate('/cashier/create')  }>Click here to generate bill </button>
                                     </div>
 
                                 </div>

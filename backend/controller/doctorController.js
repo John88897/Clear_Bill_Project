@@ -1,5 +1,6 @@
 const { where } = require("sequelize");
 const { Patient, User, Service } = require("../models");
+
 exports.getDoctor = async (req, res) => {
   try {
     const doctor = await User.findOne({
@@ -19,28 +20,24 @@ exports.getDoctor = async (req, res) => {
 };
 exports.findService = async (req, res) => {
   const doctorId = req.params.id;
-  const { patientId, serviceId } = req.body;
-  if (!patientId || !serviceId) {
-    return res.status(400).json("All field must be provided!");
+    const { patientId, serviceId, quantity } = req.body;
+
+  if (!patientId || !serviceId || !quantity) {
+    return res.status(400).json({ error: "Patient ID, Service ID, and Quantity are all required!" });
   }
+
   try {
     const findPatient = await Patient.findOne({
-      where: {
-        patient_id: patientId,
-      },
+      where: { patient_id: patientId },
     });
     if (!findPatient) {
-      return res
-        .status(404)
-        .json({ error: `cannot find the patient with this id!` });
+      return res.status(404).json({ error: `Cannot find the patient with this ID!` });
     }
     const findService = await Service.findOne({
-      where: { 
-      service_id: serviceId,
-      }
+      where: { service_id: serviceId } 
     });
     if (!findService) {
-      return res.status(404).json({ error: `service can not be found` });
+      return res.status(404).json({ error: `Service ID ${serviceId} does not exist in the database.` });
     }
     const doctor = await User.findOne({
       where: {
@@ -49,15 +46,17 @@ exports.findService = async (req, res) => {
       },
     });
     if (!doctor) {
-      return res
-        .status(403)
-        .json({ error: "Sorry! only Doctor can accessed!!" });
+      return res.status(403).json({ error: "Access Denied: Only users with the Doctor role can access this entry point." });
     }
+    return res.status(200).json({
+      message: "Data validated and processed successfully!",
+      patientId,
+      serviceId,
+      quantity
+    });
 
-    console.log(findService);
-    res.status(201).json(findService);
   } catch (error) {
-    console.log({ error: error + `There is an error inside doctorController` });
+    console.log("Error inside findService controller: " + error);
     return res.status(500).json({ error: error.message });
   }
 };

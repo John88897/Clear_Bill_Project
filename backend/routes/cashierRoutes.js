@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const { getCashier, generateBill } = require("../controller/cashierController");
-
-router.get("/:id", getCashier);
-router.get("/:id/genearateBill", generateBill);
+const { getCashier, RecievedBill } = require("../controller/cashierController");
+const { verifyCashier } = require ("../middleware/authMiddleware");
+router.get("/:id",verifyCashier, getCashier);
+router.post("/:id/recieve", verifyCashier, RecievedBill );
 
 module.exports = router;

@@ -14,7 +14,6 @@ function DoctorDashboard() {
     if (!user.id) {
       return;
     }
-    const token = localStorage.getItem('token');
     authFetch(`http://localhost:5000/api/doctors/${user.id}`)
       .then((res) => {
         return res.json();

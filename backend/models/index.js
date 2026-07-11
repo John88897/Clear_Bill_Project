@@ -10,15 +10,12 @@ User.hasOne(Patient, {
     foreignKey: "user_id"
 });
 
-// Patient.hasMany(Service, { foreignKey: "patient_id", as: "services" });
-// Service.belongsTo(Patient, { foreignKey: "patient_id", as: "patient" });
-
-// User.hasMany(Service, { foreignKey: "doctor_id", as: "servicesAsDoctor" });
-// Service.belongsTo(User, { foreignKey: "doctor_id", as: "doctor" })
-
 // Patient ↔ Bills
 Patient.hasMany(Bill, {
     foreignKey: "patient_id"
+});
+Patient.belongsTo(User, {
+    foreignKey: "user_id"
 });
 
 Bill.belongsTo(Patient, {

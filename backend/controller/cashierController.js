@@ -1,5 +1,22 @@
-const { Payment, Bill, Patient, User } = require("../models");
+const { Payment, Bill, Patient, User, BillDetail, Service } = require("../models");
 const { findService } = require("./doctorController");
+
+async function getSubtotal(quantity, serviceId) {
+    const servicePrice = await Service.findOne({
+        where:{
+            service_id: serviceId
+        }
+    });
+      if (!servicePrice) {
+        throw new Error("Service not found");
+    }
+    const total = parseFloat(servicePrice.cost) * quantity
+    return total;
+}
+function getTotal(quantity) {
+    const tax = 0.50 * quantity ; 
+    return tax;
+}
 exports.getCashier = async (req, res) => {
 
     try {
@@ -10,42 +27,47 @@ exports.getCashier = async (req, res) => {
                 role: "Cashier"
             }
         })
-        if(!cashier){
-            return res.status(404).json({error: `cashier cannot be found!`})
+        if (!cashier) {
+            return res.status(404).json({ error: `cashier cannot be found!` })
         }
         res.json(cashier);
     } catch (error) {
         console.log("There is an error in cashierController" + error);
-        res.status(500).json(error);
+        res.status(500).json({error: error.message});
     }
-};  
-async function getSubtotal() {
-    
-}
-async function getTotal(){
-    
-}
-exports.generateBill = async (req , res) => {
-    const {bill_id, detail_id, service_id} = req.params.id
-    const {patient_id, quantity, subtotal, bill_date, total_amount, status} = req.body;
-    if(!findService){
-        return res.status(404).json({error: `cannot find any service!`})
+};
+exports.RecievedBill = async (req, res) => {
+  const { patientId, serviceId, quantity } = req.body;
+  
+  if (!patientId || !serviceId || !quantity) {
+    return res.status(400).json({ error: "patientId, serviceId, and quantity are required!" });
+  }
+  try {
+    const patient = await Patient.findOne({ where: { patient_id: patientId } });
+    if (!patient) {
+      return res.status(404).json({ error: "Patient not found" });
     }
-    try {
-        const newBill = await Bill.create({
-            patient_id: patient_id,
-            detail_id: detail_id,
-            service_id: findService.service_id,
-            quantity: 1,
-            bill_date: bill_date,
-            subtotal: subtotal,
-            total_amount: total_amount,
-            status:status
-        })
-        console.log("Added new Bill: " + newBill)
-        res.json(newBill);
-    } catch (error) {
-        console.log(error + `there is an error in casheirController`)
-        return res.status(404).json({error: error})
-    }
+    const subtotal = await getSubtotal(quantity, serviceId);
+    const total = subtotal + getTotal(quantity);
+    const now = new Date();
+
+    const newBill = await Bill.create({
+      patient_id: patientId,
+      bill_date: now.toISOString().split("T")[0],
+      total_amount: total,
+    });
+
+    const newBillDetail = await BillDetail.create({
+      bill_id: newBill.bill_id,
+      service_id: serviceId,
+      quantity,
+      subtotal,
+    });
+
+    res.status(201).json({ bill: newBill, detail: newBillDetail });
+  } catch (error) {
+    console.log("Error in RecievedBill: " + error);
+    res.status(500).json({ error: error.message });
+  }
 }
+
