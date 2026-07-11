@@ -14,7 +14,10 @@ const adminRoutes = require("./routes/adminRoutes");
 const doctorRoutes = require("./routes/doctorRoutes")
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "https://your-frontend.vercel.app",
+  credentials: true,
+}));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
