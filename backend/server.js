@@ -15,7 +15,7 @@ const doctorRoutes = require("./routes/doctorRoutes")
 const app = express();
 
 app.use(cors({
-  origin: "https://your-frontend.vercel.app",
+  origin: "https://clear-bill-project.vercel.app",
   credentials: true,
 }));
 app.use(express.json());
