@@ -1,7 +1,6 @@
 import {NavLink, useNavigate } from 'react-router-dom';
 import logo from '../src/assets/logo.png';
 import home from '../src/assets/hom.png';
-import service from '../src/assets/service.png';
 import user from '../src/assets/user.png';
 import report from '../src/assets/report.png'; 
 import logout from '../src/assets/logout.png'; 
@@ -16,7 +15,6 @@ function AdminLayout({children}) {
     const navItems = [
         {to: '/admin/dashboard', label: 'Dashboard', icon: home},
         {to: '/admin/users', label: 'Users', icon: user},
-        {to: '/admin/services', label: 'Services', icon: service},
         {to: '/admin/reports', label: 'Reports', icon: report},
     ];
 

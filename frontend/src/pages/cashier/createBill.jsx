@@ -22,6 +22,7 @@ function CreateBill() {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const navigate = useNavigate();
   const location = useLocation();
+
   const { patientId, serviceId, quantity } = location.state || {};
 
   useEffect(() => {
@@ -116,6 +117,7 @@ function CreateBill() {
 
   return (
     <>
+    
       <h3 className="flex justify-center text-3xl mt-[3.5em] font-bold ">
         Bill Receipt
       </h3>
@@ -131,10 +133,20 @@ function CreateBill() {
           <p className="font-semibold text-emerald-600 text-xl">Total: ${billDetails.total}</p>
         </div>
 
-        <div className="mt-[6.5em] ml-[4em] text-center">
-          <div className="border border-gray-700 rounded-md m-4 px-2 text-white bg-orange-500 hover:bg-orange-600 text-md py-1 hover:border-gray-500">
+        <div className="mt-[5em] ml-[4em]  grid text-center items-center px-10">
+          <div className="px-5 py-4 border border-gray-700 rounded-[5em] text-white bg-orange-500 hover:bg-orange-600 text-md  hover:border-gray-500">
             <button type="button" onClick={() => setShowDashboard(true)}>
               Return to Dashboard
+            </button>
+          </div>
+          <div className="px-5 py-4 border border-gray-700 rounded-[5em] text-white bg-green-500 hover:bg-green-600 text-md hover:border-gray-500">
+            <button type="button" onClick={() => navigate('/cashier/verifyPayment')}>
+              Pay Now
+            </button>
+          </div>
+          <div className="px-5 py-4 border border-gray-700 rounded-[5em] text-white bg-red-500 hover:bg-red-600 text-md hover:border-gray-500">
+            <button type="button" onClick={() => setShowDashboard(true)}>
+              Pay Later
             </button>
           </div>
         </div>

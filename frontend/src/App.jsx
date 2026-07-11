@@ -15,7 +15,7 @@ import InputService from './pages/doctor/generateService.jsx';
 import CashierDashboard from './pages/cashier/cashierDashboard.jsx';
 import CreateBill from './pages/cashier/createBill.jsx';
 import AdminReports from './pages/admin/AdminReports';
-
+import VerifyPayment from './pages/cashier/verifyPayment.jsx';
 import './App.css'
 import './index.css'
 
@@ -51,6 +51,7 @@ function App() {
         <Route element={<RootLayout />}>
           <Route path='/cashier/dashboard' element={<CashierDashboard />}></Route>
           <Route path='/cashier/create' element={<CreateBill/>}></Route>
+          <Route path='/cashier/verifyPayment' element={<VerifyPayment/>}></Route>
         </Route>
 
         {/* admin route */}

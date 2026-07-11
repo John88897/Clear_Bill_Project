@@ -52,26 +52,6 @@ exports.getServices = async (req, res) => {
         res.status(500).json(error);
     }
 };
-
-exports.createService = async (req, res) => {
-    try {
-        const { service_name, description, cost } = req.body;
-        const service = await Service.create({ service_name, description, cost });
-        res.json(service);
-    } catch (error) {
-        res.status(500).json(error);
-    }
-};
-
-exports.deleteService = async (req, res) => {
-    try {
-        await Service.destroy({ where: { service_id: req.params.id } });
-        res.json({ message: "Service deleted" });
-    } catch (error) {
-        res.status(500).json(error);
-    }
-};
-
 exports.createUser = async (req, res) => {
     try {
         console.log("BODY RECEIVED:", req.body);

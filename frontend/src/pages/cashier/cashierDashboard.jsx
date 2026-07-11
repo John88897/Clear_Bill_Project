@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import hospital from '../../assets/hospital.png'
-// import LoginPage from "../LoginPage";
 import CreateBill from "./createBill";
 import { useNavigate } from "react-router-dom";
 import { authFetch } from "../../utils/authFetch";
@@ -11,12 +10,12 @@ function CashierDashboard() {
     const [error, setError] = useState(false);
 
     const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const navigate  = useNavigate();
+    const navigate = useNavigate();
     useEffect(() => {
         console.log("user id is :", user.id);
         if (!user.id) {
             navigate("/login");
-             return;
+            return;
         }
         authFetch(`http://localhost:5000/api/cashiers/${user.id}`)
             .then((res) => {
@@ -45,14 +44,22 @@ function CashierDashboard() {
                                 <div>
                                     <h1 className="font-bold text-[20px] sm:text-[40px]">Welcome : {cashier?.name}</h1>
                                 </div>
-                                <div className="mt-5 p-6">
-                                    <div className="text-center bg-blue-[900] border border-gray-300 rounded-lg py-5 text-lg font-semibold mt-[1em] hover:text-indigo-700 hover:bg-[#E5E4E2]   ">
-                                        <button onClick={() => navigate('/cashier/create')  }>Click here to generate bill </button>
+
+                                    <div className="mt-5 p-6">
+                                        <div className="text-center bg-blue-[900] border border-gray-300 rounded-lg py-5 text-lg font-semibold mt-[1em] hover:text-indigo-700 hover:bg-[#E5E4E2]   ">
+                                            <button onClick={() => navigate('/cashier/create')}>Get bill for patient</button>
+                                        </div>
+
+                                    </div>
+                                    <div className="p-6">
+                                        <div className="text-center bg-blue-[900] border border-gray-300 rounded-lg py-5 text-lg font-semibold hover:text-indigo-700 hover:bg-[#E5E4E2]   ">
+                                            <button onClick={() => navigate('/cashier/verifyPayment')}>Set payment status</button>
+                                        </div>
+
                                     </div>
 
-                                </div>
                             </div>
-                            <div className="w-30 mt-[5em] md:w-60 "><img src={hospital} alt="this is hospital logo" /></div>
+                            <div className="w-30 mt-[7em] md:w-60 "><img src={hospital} alt="this is hospital logo" /></div>
                         </div>
                     </div>
                 </div>

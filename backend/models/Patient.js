@@ -12,7 +12,6 @@ const Patient = sequelize.define("Patient", {
             unique: true
         },
         gender: DataTypes.STRING,
-        // phone: DataTypes,STRING,
         address: DataTypes.TEXT
 },  {
         tableName: "patients",

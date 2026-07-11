@@ -54,8 +54,6 @@ function PaymentHistory() {
                             </div>
 
                             <hr className="border-gray-200 mb-3" />
-
-                            {/* Details Grid */}
                             <div className="grid grid-cols-2 gap-y-3 text-sm">
                                 <div>
                                     <p className="text-gray-400">Bill ID</p>

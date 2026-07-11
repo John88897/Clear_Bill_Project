@@ -57,11 +57,18 @@ function RegisterPatient() {
       );
       const data = await newPatient.json();
 
-      if (!newPatient.ok) {
+      if (newPatient.ok) {
+        setGender("")
+      } else {
         setError(data.error);
         window.alert("Already exisiting patient!");
         return;
+
       }
+
+
+
+
       alert("successfully register patient" + JSON.stringify(data));
       navigate("/receptionist/dashboard");
     } catch (error) {
@@ -125,11 +132,25 @@ function RegisterPatient() {
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
               ></input>
-              <input
+
+
+              {/* <input
                 className=" border border-[#00668A] rounded-sm px-2"
                 type="text"
                 onChange={(e) => setGender(e.target.value)}
-              ></input>
+              ></input> */}
+              <select
+                value={gender}
+                onChange={e => setGender(e.target.value)}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              >
+                <option value="" disabled>Select Gender</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+              </select>
+
+
               <input
                 className=" border border-[#00668A] rounded-sm px-2"
                 type="text"

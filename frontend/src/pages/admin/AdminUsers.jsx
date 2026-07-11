@@ -5,13 +5,13 @@ import { authFetch } from "../../utils/authFetch";
 function AdminUsers() {
     const [userList, setUserList] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    const [form, setForm] = useState({ name: '', email: '', password: '', role: 'Patient' })
-   useEffect(() => {
-    authFetch('http://localhost:5000/api/admin/users')
-        .then(res => res.json())
-        .then(data => setUserList(data.users || data))
-        .catch(err => console.error(err));
-}, []);
+    const [form, setForm] = useState({ name: '', email: '', password: '', role: '' })
+    useEffect(() => {
+        authFetch('http://localhost:5000/api/admin/users')
+            .then(res => res.json())
+            .then(data => setUserList(data.users || data))
+            .catch(err => console.error(err));
+    }, []);
 
     const handleDelete = async (id) => {
         if (!confirm("Are you sure you want to delete this user?")) return;
@@ -33,23 +33,22 @@ function AdminUsers() {
 
         if (res.ok) {
             setUserList([...userList, data]);
-            setForm({ name: '', email: '', password: '', role: 'Patient' });
+            setForm({ name: '', email: '', password: '', role: '' });
             setShowForm(false);
+            alert(`successfully created ${name}`)
         } else {
             alert(data.message);
         }
     };
 
     const roleColor = (role) => {
-    switch (role) {
-        case 'Admin': return 'bg-purple-100 text-purple-700';
-        case 'Patient': return 'bg-cyan-100 text-cyan-700';
-        case 'Cashier': return 'bg-green-100 text-green-700';
-        case 'Receptionist': return 'bg-orange-100 text-orange-700';
-        case 'Doctor': return 'bg-blue-100 text-blue-700';
-        default: return 'bg-gray-100 text-gray-700';
-    }
-};
+        switch (role) {
+            case 'Cashier': return 'bg-green-100 text-green-700';
+            case 'Receptionist': return 'bg-orange-100 text-orange-700';
+            case 'Doctor': return 'bg-blue-100 text-blue-700';
+            default: return 'bg-gray-100 text-gray-700';
+        }
+    };
 
     return (
         <AdminLayout>
@@ -90,11 +89,10 @@ function AdminUsers() {
                             onChange={e => setForm({ ...form, role: e.target.value })}
                             className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
                         >
-                            <option value="Patient">Patient</option>
+                            <option value="" disabled>Select role</option>
                             <option value="Cashier">Cashier</option>
                             <option value="Receptionist">Receptionist</option>
                             <option value="Doctor">Doctor</option>
-                            <option value="Admin">Admin</option>
                         </select>
                     </div>
                     <div className="flex gap-2 mt-3">

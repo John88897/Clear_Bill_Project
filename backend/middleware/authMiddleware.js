@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 require('dotenv').config()
 
-exports.verifyToken = (req, res, next) => {
+exports.verifyWebToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   
@@ -9,8 +9,6 @@ exports.verifyToken = (req, res, next) => {
     return res.status(401).json({ message: "No token provided" });
   }
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    console.log("SECRET IN MIDDLEWARE:", process.env.ACCESS_TOKEN_SECRET);
-    console.log("JWT ERROR:", err);
     if (err) {
       return res.status(403).json({ message: "Invalid or expired token" });
     }
