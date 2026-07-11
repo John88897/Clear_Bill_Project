@@ -38,7 +38,7 @@ function CreateBill() {
       return;
     }
 
-    authFetch(`http://localhost:5000/api/cashiers/${user.id}`)
+    authFetch(`${import.meta.env.VITE_API_URL}/api/cashiers/${user.id}`)
       .then((res) => res.json())
       .then(() => {
         getReciepInfo(savedPayload);

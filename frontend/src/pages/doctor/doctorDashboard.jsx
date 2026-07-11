@@ -14,7 +14,7 @@ function DoctorDashboard() {
     if (!user.id) {
       return;
     }
-    authFetch(`http://localhost:5000/api/doctors/${user.id}`)
+    authFetch(`${import.meta.env.VITE_API_URL}/api/doctors/${user.id}`)
       .then((res) => {
         return res.json();
         if (!res.ok) {

@@ -15,7 +15,7 @@ function ReceptionistDashboard() {
         if (!user.id) {
              return;
         }
-        authFetch(`http://localhost:5000/api/receptionists/${user.id}`)
+        authFetch(`${import.meta.env.VITE_API_URL}/api/receptionists/${user.id}`)
             .then((res) => {
                 return res.json()
             }

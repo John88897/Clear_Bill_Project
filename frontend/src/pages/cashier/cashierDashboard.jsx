@@ -17,7 +17,7 @@ function CashierDashboard() {
             navigate("/login");
             return;
         }
-        authFetch(`http://localhost:5000/api/cashiers/${user.id}`)
+        authFetch(`${import.meta.env.VITE_API_URL}/api/cashiers/${user.id}`)
             .then((res) => {
                 return res.json()
             }

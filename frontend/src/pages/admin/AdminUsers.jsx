@@ -15,7 +15,7 @@ function AdminUsers() {
 
     const handleDelete = async (id) => {
         if (!confirm("Are you sure you want to delete this user?")) return;
-        await authFetch(`http://localhost:5000/api/admin/users/${id}`, { method: 'DELETE' });
+        await authFetch(`${import.meta.env.VITE_API_URL}/api/admin/users/${id}`, { method: 'DELETE' });
         setUserList(userList.filter(u => u.user_id !== id));
     };
 
@@ -24,7 +24,7 @@ function AdminUsers() {
             alert("Please fill all fields");
             return;
         }
-        const res = await authFetch('http://localhost:5000/api/admin/users', {
+        const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/admin/users`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(form)

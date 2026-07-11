@@ -9,7 +9,7 @@ function Dashboard() {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     useEffect(() => {
         if (!user.id) return;
-        authFetch(`http://localhost:5000/api/patient/dashboard/${user.id}`)
+        authFetch(`${import.meta.env.VITE_API_URL}/api/patient/dashboard/${user.id}`)
             .then(res => res.json())
             .then(data => {
                 console.log("API DATA:", data);

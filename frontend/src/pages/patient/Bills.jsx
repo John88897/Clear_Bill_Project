@@ -11,7 +11,7 @@ function Bills() {
     useEffect(() => {
         if (!user.id) return;
 
-        fetch(`http://localhost:5000/api/bills/patient/${user.id}`)
+        fetch(`${import.meta.env.VITE_API_URL}/api/bills/patient/${user.id}`)
             .then(res => res.json())
             .then(data => {
                 console.log("Bills:", data);

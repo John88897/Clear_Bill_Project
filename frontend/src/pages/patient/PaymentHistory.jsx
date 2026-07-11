@@ -12,7 +12,7 @@ function PaymentHistory() {
         const user = JSON.parse(localStorage.getItem("user") || "{}");
         if (!user.id) return;
 
-        authFetch(`http://localhost:5000/api/payments/patient/${user.id}`)
+        authFetch(`${import.meta.env.VITE_API_URL}/api/payments/patient/${user.id}`)
             .then(res => res.json())
             .then(data => {
                 console.log("Payments:", data);

@@ -13,7 +13,7 @@ function AdminRevenue() {
         setLoading(true);
         try {
             const res = await authFetch(
-                `http://localhost:5000/api/admin/reports?startDate=${startDate}&endDate=${endDate}`
+                `${import.meta.env.VITE_API_URL}/api/admin/reports?startDate=${startDate}&endDate=${endDate}`
             );
             const data = await res.json();
             setReport({

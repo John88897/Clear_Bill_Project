@@ -23,7 +23,7 @@ function RegisterPatient() {
       setLoading(false);
       return;
     }
-    authFetch(`http://localhost:5000/api/receptionists/${user.id}`)
+    authFetch(`${import.meta.env.VITE_API_URL}/api/receptionists/${user.id}`)
       .then((res) => {
         return res.json();
       })
@@ -41,7 +41,7 @@ function RegisterPatient() {
   async function handleCreatePatient() {
     try {
       const newPatient = await authFetch(
-        `http://localhost:5000/api/receptionists/${user.id}/create`,
+        `${import.meta.env.VITE_API_URL}/api/receptionists/${user.id}/create`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

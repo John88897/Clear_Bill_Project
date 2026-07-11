@@ -9,7 +9,7 @@ function BillDetail() {
   const [bill, setBill] = useState(null);
 
   useEffect(() => {
-    authFetch(`http://localhost:5000/api/bills/${id}`)
+    authFetch(`${import.meta.env.VITE_API_URL}/api/bills/${id}`)
       .then(res => res.json())
       .then(data => {
         console.log("Bill Detail:", data);
