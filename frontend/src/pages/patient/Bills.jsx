@@ -3,22 +3,23 @@ import al from '../../assets/al.png'
 import calendar from '../../assets/calendar.png'
 import an from '../../assets/an.png'
 import { useNavigate } from 'react-router-dom';
-
+import { authFetch } from '../../utils/authFetch';
 function Bills() {
     const [bills, setBills] = useState([]); const [filter, setFilter] = useState("All");
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
     useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
         if (!user.id) return;
 
-        fetch(`${import.meta.env.VITE_API_URL}/api/bills/patient/${user.id}`)
+        authFetch(`${import.meta.env.VITE_API_URL}/api/bills/patient/${user.id}`)
             .then(res => res.json())
             .then(data => {
                 console.log("Bills:", data);
-                setBills(data);
+                setBills(Array.isArray(data) ? data : []);
             })
             .catch(err => console.error(err));
     }, []);
+
     const filteredBills =
         filter === "All"
             ? bills
