@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { data, useNavigate } from "react-router-dom";
 import { authFetch } from "../../utils/authFetch";
 import StaffLayout from "../../../layout/StaffLayout";
-import home from '..//assets/hom.png';
+import home from '../../assets/hom.png';
 import service from '../../assets/service.png';
 
 const navItems = [
