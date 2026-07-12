@@ -1,5 +1,5 @@
 const {DataTypes, STRING} =require("sequelize");
-const sequelize = require("../config/db");
+const {sequelize} = require("../config/db");
 
 const Patient = sequelize.define("Patient", {
     patient_id: {
