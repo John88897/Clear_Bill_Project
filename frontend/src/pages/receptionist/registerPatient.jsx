@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { authFetch } from "../../utils/authFetch";
 import StaffLayout from "../../../layout/StaffLayout";
 import home from '../../assets/hom.png';
-import add from '../../assets/addU.png'
+import add from '../../assets/add.png'
 
 const navItems = [
           { to: '/receptionist/dashboard', icon: home, label: 'Dashboard' },
