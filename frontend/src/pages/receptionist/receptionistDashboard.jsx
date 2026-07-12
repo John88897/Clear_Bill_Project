@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import hospital from '../../assets/hospital.png'
 import { useNavigate } from "react-router-dom";
 import { authFetch } from "../../utils/authFetch";
+import StaffLayout from "../../../layout/StaffLayout";
+import home from '../../assets/hom.png';
+import add from '../../assets/addU.png'
 
 function ReceptionistDashboard() {
     const [receptionist, setReceptionist] = useState(null);
@@ -29,33 +32,33 @@ function ReceptionistDashboard() {
                 setLoading(false);
             });
     }, []);
-    if (loading) return <h1>Loading...</h1>;
-    if (error) return <h1>Error: {error}</h1>;
+     const navItems = [
+        { to: '/receptionist/dashboard', icon: home, label: 'Dashboard' },
+        { to: '/receptionist/register', icon: add, label: 'Register Patient' },
+    ];
+     if (loading) return <StaffLayout role="Receptionist" navItems={navItems}><p>Loading...</p></StaffLayout>;
+    if (error) return <StaffLayout role="Receptionist" navItems={navItems}><p className="text-red-500">Error: {error}</p></StaffLayout>;
+
     return (
         <>
-            <div className="flex justify-center min-h-screen pb-[10em]">
+           <StaffLayout role="Receptionist" navItems={navItems}>
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">Welcome, {user.name}</h1>
 
-                <div className=" flex flex-col justify-center items-center">
-                    <div className=" justify-center items-center border-1 border-gray-300 rounded-lg px-[2em] ">
-                        <div className=" flex flex-row justify-around   ">
-                            <div className="pt-4">
-                                <div>
-                                    <h1 className="font-bold text-[20px] sm:text-[40px]">Welcome Receptionist: {user?.name}</h1>
-                                </div>
-                                <div className="mt-5 p-6">
-                                    <div className="text-center bg-blue-[900] border-1 border-gray-300 rounded-lg py-5 text-lg font-semibold mt-[1em] hover:text-indigo-700 hover:bg-[#E5E4E2]   ">
-                                        <button onClick={() => navigate('/receptionist/register')}>Click here to create patient </button>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div className="w-30 mt-[5em] md:w-60 "><img src={hospital} alt="this is hospital logo" /></div>
+            <div className="grid grid-cols-1 gap-4 max-w-md">
+                <div
+                    onClick={() => navigate('/receptionist/register')}
+                    className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all hover:border-purple-200"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-2xl">➕</div>
+                        <div>
+                            <p className="font-semibold text-gray-800">Register New Patient</p>
+                            <p className="text-sm text-gray-400">Create a new patient account</p>
                         </div>
                     </div>
                 </div>
-
-
             </div>
+        </StaffLayout>
         </>
     )
 }

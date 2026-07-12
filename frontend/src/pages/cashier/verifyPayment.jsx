@@ -1,161 +1,136 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { authFetch } from "../../utils/authFetch";
-
+import StaffLayout from "../../../layout/StaffLayout";
+import bill from "../../assets/bills.png";
+import home from "../../assets/hom.png";
+import verify from "../../assets/verify.png";
+const navItems = [
+        { to: '/cashier/dashboard', icon: home, label: 'Dashboard' },
+        { to: '/cashier/create', icon: bill, label: 'Create Bill' },
+        { to: '/cashier/verifyPayment', icon: verify, label: 'Verify Payment' },
+    ];
 function VerifyPayment() {
-  const [cashier, setCashier] = useState(null);
-  const [bills, setBills] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+    const [bills, setBills] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user.id) {
-      navigate("/login");
-      return;
-    }
+    useEffect(() => {
+        if (!user.id) { navigate("/"); return; }
+        authFetch(`${import.meta.env.VITE_API_URL}/api/cashiers/${user.id}`)
+            .then(res => res.json())
+            .then(() => fetchBills())
+            .catch(err => { setError(err.message); setLoading(false); });
+    }, []);
 
-    authFetch(`${import.meta.env.VITE_API_URL}/api/cashiers/${user.id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCashier(data);
-        return fetchBills();
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message || "Something went wrong.");
-        setLoading(false);
-      });
-  }, []);
+    const fetchBills = async () => {
+        try {
+            const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/bills`);
+            const data = await res.json();
+            setBills(Array.isArray(data) ? data : []);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const fetchBills = async () => {
-    try {
-      const res = await authFetch("http://localhost:5000/api/bills");
-      const data = await res.json();
-      if (res.ok) {
-        setBills(Array.isArray(data) ? data : [data]);
-      } else {
-        setError(data.message || "Failed to fetch bills");
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const handleMarkPaid = async (billId) => {
+        try {
+            const res = await authFetch(
+                `${import.meta.env.VITE_API_URL}/api/bills/${billId}/status`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status: "Paid" }),
+                }
+            );
+            if (res.ok) {
+                setBills(prev => prev.map(b => b.bill_id === billId ? { ...b, status: "Paid" } : b));
+            } else {
+                const data = await res.json();
+                alert(data.message || "Failed to update status");
+            }
+        } catch (err) {
+            alert("Network error, please try again.");
+        }
+    };
 
-  const handleToggleStatus = async (billId, currentStatus) => {
-    if (currentStatus === "Paid") return;
+    if (loading) return <StaffLayout role="Cashier" navItems={navItems}><p>Loading...</p></StaffLayout>;
+    if (error) return <StaffLayout role="Cashier" navItems={navItems}><p className="text-red-500">Error: {error}</p></StaffLayout>;
 
-    try {
-      const res = await authFetch(`http://localhost:5000/api/bills/${billId}/status`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "Paid" }),
-      });
+    return (
+        <StaffLayout role="Cashier" navItems={navItems}>
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">Verify Payment</h1>
 
-      if (res.ok) {
-        setBills((prevBills) =>
-          prevBills.map((bill) =>
-            bill.bill_id === billId ? { ...bill, status: "Paid" } : bill
-          )
-        );
-      } else {
-        const data = await res.json();
-        alert(data.message || "Failed to update status");
-      }
-    } catch (err) {
-      console.error("Error updating status:", err);
-      alert("Network error, please try again.");
-    }
-  };
-
-  if (loading) return <div className="p-8 text-center text-gray-500 font-medium">Loading panel...</div>;
-  if (error) return <div className="p-8 text-center text-red-500 font-medium">Error: {error}</div>;
-
-  return (
-    <div className="max-w-6xl mx-auto p-6 my-10">
-      <div className="mb-8 text-center md:text-left">
-        <h1 className="text-3xl font-bold text-slate-800">Payment Verification</h1>
-        <p className="text-slate-500 mt-1">Logged in as Cashier: {cashier?.User?.name || user.id}</p>
-      </div>
-
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-400 font-semibold uppercase tracking-wider text-xs">
-              <tr>
-                <th className="px-6 py-4">Invoice ID</th>
-                <th className="px-6 py-4">Patient Name</th>
-                <th className="px-6 py-4">Bill Date</th>
-                <th className="px-6 py-4 text-right">Total Amount</th>
-                <th className="px-6 py-4 text-center">Status Badge</th>
-                <th className="px-6 py-4 text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {bills.length === 0 ? (
-                <tr>
-                  <td colSpan="6" className="text-center py-10 text-gray-400">
-                    No pending bills found.
-                  </td>
-                </tr>
-              ) : (
-                bills.map((bill) => {
-                  const patientName = bill.Patient?.User?.name || "N/A";
-                  const isPaid = bill.status === "Paid";
-
-                  return (
-                    <tr key={bill.bill_id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="px-6 py-4 font-mono font-medium text-slate-600">
-                        #BILL-{String(bill.bill_id).padStart(3, "0")}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="font-semibold text-slate-700">{patientName}</div>
-                        <div className="text-xs text-slate-400">{bill.Patient?.User?.email}</div>
-                      </td>
-                      <td className="px-6 py-4 text-slate-500">{bill.bill_date}</td>
-                      <td className="px-6 py-4 text-right font-bold text-slate-700">
-                        ${Number(bill.total_amount).toFixed(2)}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide ${
-                            isPaid
-                              ? "bg-green-100 text-green-700"
-                              : "bg-amber-100 text-amber-700"
-                          }`}
-                        >
-                          <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${isPaid ? "bg-green-500" : "bg-amber-500"}`}></span>
-                          {bill.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        {isPaid ? (
-                          <span className="inline-flex items-center text-gray-400 text-xs font-medium bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
-                            Verified
-                          </span>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <table className="w-full text-sm">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th className="text-left px-4 py-3 text-gray-500 font-medium">Bill ID</th>
+                            <th className="text-left px-4 py-3 text-gray-500 font-medium">Patient</th>
+                            <th className="text-left px-4 py-3 text-gray-500 font-medium">Date</th>
+                            <th className="text-right px-4 py-3 text-gray-500 font-medium">Total</th>
+                            <th className="text-center px-4 py-3 text-gray-500 font-medium">Status</th>
+                            <th className="text-center px-4 py-3 text-gray-500 font-medium">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {bills.length === 0 ? (
+                            <tr>
+                                <td colSpan="6" className="text-center py-10 text-gray-400">
+                                    No bills found.
+                                </td>
+                            </tr>
                         ) : (
-                          <button
-                            onClick={() => handleToggleStatus(bill.bill_id, bill.status)}
-                            className="px-4 py-1.5 rounded-xl font-medium text-xs border border-green-200 text-green-600 bg-green-50/50 hover:bg-green-100 transition-all"
-                          >
-                            Mark as Paid
-                          </button>
+                            bills.map(bill => {
+                                const isPaid = bill.status === "Paid";
+                                return (
+                                    <tr key={bill.bill_id} className="border-b border-gray-100 hover:bg-gray-50">
+                                        <td className="px-4 py-3 font-mono text-gray-600">
+                                            #BILL-{String(bill.bill_id).padStart(3, "0")}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <p className="font-medium text-gray-800">{bill.Patient?.User?.name || "N/A"}</p>
+                                            <p className="text-xs text-gray-400">{bill.Patient?.User?.email}</p>
+                                        </td>
+                                        <td className="px-4 py-3 text-gray-500">{bill.bill_date}</td>
+                                        <td className="px-4 py-3 text-right font-bold text-gray-800">
+                                            ${Number(bill.total_amount).toFixed(2)}
+                                        </td>
+                                        <td className="px-4 py-3 text-center">
+                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                                isPaid ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"
+                                            }`}>
+                                                {bill.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-3 text-center">
+                                            {isPaid ? (
+                                                <span className="text-gray-400 text-xs bg-gray-50 px-3 py-1 rounded-xl border border-gray-100">
+                                                    Verified ✓
+                                                </span>
+                                            ) : (
+                                                <button
+                                                    onClick={() => handleMarkPaid(bill.bill_id)}
+                                                    className="px-3 py-1 rounded-xl text-xs font-medium border border-green-200 text-green-600 bg-green-50 hover:bg-green-100 transition"
+                                                >
+                                                    Mark as Paid
+                                                </button>
+                                            )}
+                                        </td>
+                                    </tr>
+                                );
+                            })
                         )}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
+                    </tbody>
+                </table>
+            </div>
+        </StaffLayout>
+    );
 }
 
 export default VerifyPayment;

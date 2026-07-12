@@ -3,7 +3,10 @@ import hospital from '../../assets/hospital.png'
 import CreateBill from "./createBill";
 import { useNavigate } from "react-router-dom";
 import { authFetch } from "../../utils/authFetch";
-
+import StaffLayout from "../../../layout/StaffLayout";
+import bill from "../../assets/bills.png";
+import home from "../../assets/hom.png";
+import verify from "../../assets/verify.png";
 function CashierDashboard() {
     const [cashier, setCashier] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -31,41 +34,48 @@ function CashierDashboard() {
                 setLoading(false);
             });
     }, []);
-    if (loading) return <h1>Loading...</h1>;
-    if (error) return <h1>Error: {error.message}</h1>;
+    const navItems = [
+        { to: '/cashier/dashboard', icon: home, label: 'Dashboard' },
+        { to: '/cashier/create', icon: bill, label: 'Create Bill' },
+        { to: '/cashier/verifyPayment', icon: verify, label: 'Verify Payment' },
+    ];
+
+    if (loading) return <StaffLayout role="Cashier" navItems={navItems}><p>Loading...</p></StaffLayout>;
+    if (error) return <StaffLayout role="Cashier" navItems={navItems}><p className="text-red-500">Error: {error}</p></StaffLayout>;
+
     return (
         <>
-            <div className="flex justify-center min-h-screen pb-[10em]">
+            <StaffLayout role="Cashier" navItems={navItems}>
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">Welcome, {user.name}</h1>
 
-                <div className=" flex flex-col justify-center items-center">
-                    <div className=" justify-center items-center border border-gray-300 rounded-lg px-[2em] ">
-                        <div className=" flex flex-row justify-around   ">
-                            <div className="pt-4">
-                                <div>
-                                    <h1 className="font-bold text-[20px] sm:text-[40px]">Welcome : {cashier?.name}</h1>
-                                </div>
-
-                                    <div className="mt-5 p-6">
-                                        <div className="text-center bg-blue-[900] border border-gray-300 rounded-lg py-5 text-lg font-semibold mt-[1em] hover:text-indigo-700 hover:bg-[#E5E4E2]   ">
-                                            <button onClick={() => navigate('/cashier/create')}>Get bill for patient</button>
-                                        </div>
-
-                                    </div>
-                                    <div className="p-6">
-                                        <div className="text-center bg-blue-[900] border border-gray-300 rounded-lg py-5 text-lg font-semibold hover:text-indigo-700 hover:bg-[#E5E4E2]   ">
-                                            <button onClick={() => navigate('/cashier/verifyPayment')}>Set payment status</button>
-                                        </div>
-
-                                    </div>
-
-                            </div>
-                            <div className="w-30 mt-[7em] md:w-60 "><img src={hospital} alt="this is hospital logo" /></div>
+            <div className="grid grid-cols-1 gap-4 max-w-md">
+                <div
+                    onClick={() => navigate('/cashier/create')}
+                    className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all hover:border-orange-200"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-2xl">🧾</div>
+                        <div>
+                            <p className="font-semibold text-gray-800">Get Bill for Patient</p>
+                            <p className="text-sm text-gray-400">Generate bill from doctor's service input</p>
                         </div>
                     </div>
                 </div>
 
-
+                <div
+                    onClick={() => navigate('/cashier/verifyPayment')}
+                    className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all hover:border-green-200"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-2xl">✅</div>
+                        <div>
+                            <p className="font-semibold text-gray-800">Verify Payment Status</p>
+                            <p className="text-sm text-gray-400">Mark bills as Paid</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </StaffLayout>
         </>
     )
 }

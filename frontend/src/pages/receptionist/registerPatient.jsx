@@ -2,181 +2,159 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authFetch } from "../../utils/authFetch";
+import StaffLayout from "../../../layout/StaffLayout";
+import home from '../../assets/hom.png';
+import add from '../../assets/addU.png'
+
+const navItems = [
+          { to: '/receptionist/dashboard', icon: home, label: 'Dashboard' },
+          { to: '/receptionist/register', icon: add, label: 'Register Patient' },
+      ];
 
 function RegisterPatient() {
-  const [name, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // const [phone, setPhone] = useState("")
-  const [gender, setGender] = useState("");
-  const [address, setAddress] = useState("");
+    const [name, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [gender, setGender] = useState("");
+    const [address, setAddress] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const navigate = useNavigate();
-  useEffect(() => {
-    console.log("user id is :", user.id);
-    if (!user.id) {
-      setError("You must be logged in to access this page.");
-      setLoading(false);
-      return;
+    useEffect(() => {
+        if (!user.id) {
+            setError("You must be logged in to access this page.");
+            setLoading(false);
+            return;
+        }
+        authFetch(`${import.meta.env.VITE_API_URL}/api/receptionists/${user.id}`)
+            .then(res => res.json())
+            .then(() => setLoading(false))
+            .catch(err => { setError(err.message); setLoading(false); });
+    }, []);
+
+    async function handleCreatePatient() {
+        try {
+            const res = await authFetch(
+                `${import.meta.env.VITE_API_URL}/api/receptionists/${user.id}/create`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ user_id: user.id, gender, address, name, email, password }),
+                }
+            );
+            const data = await res.json();
+            if (res.ok) {
+                alert("Patient registered successfully!");
+                setFullName(""); setEmail(""); setPassword("");
+                setGender(""); setAddress("");
+                navigate("/receptionist/dashboard");
+            } else {
+                alert(data.error || "Already existing patient!");
+            }
+        } catch (err) {
+            setError(err.message);
+        }
     }
-    authFetch(`${import.meta.env.VITE_API_URL}/api/receptionists/${user.id}`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setError(error.message);
-        setLoading(false);
-      });
-  }, []);
 
-  async function handleCreatePatient() {
-    try {
-      const newPatient = await authFetch(
-        `${import.meta.env.VITE_API_URL}/api/receptionists/${user.id}/create`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_id: user.id,
-            gender,
-            address,
-            name,
-            email,
-            password,
-          }),
-        },
-      );
-      const data = await newPatient.json();
+    if (loading) return <StaffLayout role="Receptionist" navItems={navItems}><p>Loading...</p></StaffLayout>;
 
-      if (newPatient.ok) {
-        setGender("")
-      } else {
-        setError(data.error);
-        window.alert("Already exisiting patient!");
-        return;
-
-      }
-
-
-
-
-      alert("successfully register patient" + JSON.stringify(data));
-      navigate("/receptionist/dashboard");
-    } catch (error) {
-      console.log("There is an error inside registerPatient" + error);
-      console.log(error.message);
-      setError(error.message);
-    }
-  }
-  if (loading) {
-    return <h1>Loading ...</h1>;
-  }
-  if (error) {
-    return (
-      <h1 className=" items-center m-[20%]">
-        <p className="">Error: {error}</p>
-        <div className="text-center border border-gray-700 rounded-md text-white bg-orange-500 hover:bg-orange-600 text-md py-3 hover:border-gray-500 mt-5">
-          <button
-            type="button"
-            onClick={() => {
-              setError(null);
-              navigate("/receptionist/dashboard");
-            }}
-          >
-            Return to Dashboard
-          </button>
-        </div>
-      </h1>
+    if (error) return (
+        <StaffLayout role="Receptionist" navItems={navItems}>
+            <div className="flex flex-col items-center justify-center h-64 gap-4">
+                <p className="text-red-500 font-medium">Error: {error}</p>
+                <button
+                    onClick={() => { setError(null); navigate("/receptionist/dashboard"); }}
+                    className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600"
+                >
+                    Return to Dashboard
+                </button>
+            </div>
+        </StaffLayout>
     );
-  }
-  return (
-    <>
-      <h3 className="flex justify-center text-3xl mt-[3.5em] font-bold ">
-        Create Patient
-      </h3>
 
-      <div className="flex ">
-        <div className="mt-[4.5em] ml-[25%] grid justify-center py-10 w-1/3 border border-[#00668A] rounded-lg">
-          <div className="flex flex-rows gap-[1em]  ">
-            <div className="grid pr-[1em]">
-              <label>Name: </label>
-              <label>Email: </label>
-              <label>Password: </label>
-              {/* <label>Phone: </label> */}
-              <label>Gender: </label>
-              <label>Address: </label>
+    return (
+        <StaffLayout role="Receptionist" navItems={navItems}>
+            <div className="max-w-lg">
+                <h1 className="text-2xl font-bold text-gray-800 mb-6">Register New Patient</h1>
+
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <label className="text-sm font-medium text-gray-600 mb-1 block">Full Name</label>
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={e => setFullName(e.target.value)}
+                                placeholder="Enter patient name"
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium text-gray-600 mb-1 block">Email</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                placeholder="Enter email"
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium text-gray-600 mb-1 block">Password</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                placeholder="Set password"
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium text-gray-600 mb-1 block">Gender</label>
+                            <select
+                                value={gender}
+                                onChange={e => setGender(e.target.value)}
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                            >
+                                <option value="" disabled>Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium text-gray-600 mb-1 block">Address</label>
+                            <input
+                                type="text"
+                                value={address}
+                                onChange={e => setAddress(e.target.value)}
+                                placeholder="Enter address"
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                            />
+                        </div>
+
+                        <div className="flex gap-3 mt-2">
+                            <button
+                                onClick={handleCreatePatient}
+                                className="flex-1 bg-purple-600 text-white py-2 rounded-lg font-medium hover:bg-purple-700 transition"
+                            >
+                                Register Patient
+                            </button>
+                            <button
+                                onClick={() => navigate("/receptionist/dashboard")}
+                                className="flex-1 border border-gray-300 text-gray-600 py-2 rounded-lg font-medium hover:bg-gray-50 transition"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div className="grid gap-4">
-              <input
-                className=" border border-[#00668A] rounded-sm px-2 "
-                type="text"
-                onChange={(e) => setFullName(e.target.value)}
-              ></input>
-              <input
-                className=" border border-[#00668A] rounded-sm px-2"
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-              ></input>
-              <input
-                className=" border border-[#00668A] rounded-sm px-2"
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
-              ></input>
-
-
-              {/* <input
-                className=" border border-[#00668A] rounded-sm px-2"
-                type="text"
-                onChange={(e) => setGender(e.target.value)}
-              ></input> */}
-              <select
-                value={gender}
-                onChange={e => setGender(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
-              >
-                <option value="" disabled>Select Gender</option>
-                <option value="Female">Female</option>
-                <option value="Male">Male</option>
-                <option value="Other">Other</option>
-              </select>
-
-
-              <input
-                className=" border border-[#00668A] rounded-sm px-2"
-                type="text"
-                onChange={(e) => setAddress(e.target.value)}
-              ></input>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-[6.5em] ml-[4em] text-center">
-          <div className="border border-gray-700 rounded-md m-4 text-white bg-blue-500 hover:bg-blue-600 text-md py-1 hover:border-gray-500">
-            <button type="button" onClick={handleCreatePatient}>
-              Insert
-            </button>
-          </div>
-          <div className="border border-gray-700 rounded-md m-4 px-2 text-white bg-orange-500 hover:bg-orange-600 text-md py-1 hover:border-gray-500">
-            <button
-              type="button"
-              onClick={() => { console.log("click"); navigate("/receptionist/dashboard"); }}>
-              Return to Dashboard
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+        </StaffLayout>
+    );
 }
 // }
 export default RegisterPatient;

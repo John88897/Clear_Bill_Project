@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import hospital from "../../assets/hospital.png";
 // import LoginPage from "../LoginPage";
 import { authFetch } from "../../utils/authFetch";
+import StaffLayout from "../../../layout/StaffLayout";
+import home from '../../assets/hom.png';
+import service from '../../assets/service.png';
+
+
 function DoctorDashboard() {
   const [userDoctor, setDoctor] = useState(null);
   const [error, setError] = useState(null);
@@ -33,44 +38,34 @@ function DoctorDashboard() {
         setLoading(false);
       });
   }, []);
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const navItems = [
+        { to: '/doctor/dashboard', icon: home, label: 'Dashboard' },
+        { to: '/doctor/input', icon: service, label: 'Input Service' },
+    ];
+
+    if (loading) return <StaffLayout role="Doctor" navItems={navItems}><p>Loading...</p></StaffLayout>;
+    if (error) return <StaffLayout role="Doctor" navItems={navItems}><p className="text-red-500">Error: {error}</p></StaffLayout>;
+
   return (
     <>
-      {" "}
-      <div className="flex justify-center min-h-screen pb-[10em]">
-        <div className=" flex flex-col justify-center items-center">
-          <div className=" justify-center items-center border border-gray-300 rounded-lg px-[2em] ">
-            <div className=" flex flex-row justify-around   ">
-              <div className="pt-4">
-                <div>
-                  <h1 className="font-bold text-[20px] sm:text-[40px]">
-                    Welcome Doctor: {userDoctor?.name}
-                  </h1>
+      <StaffLayout role="Doctor" navItems={navItems}>
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">Welcome, Dr. {user.name}</h1>
+
+            <div className="grid grid-cols-1 gap-4 max-w-md">
+                <div
+                    onClick={() => navigate('/doctor/input')}
+                    className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all hover:border-teal-200"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center text-2xl">💊</div>
+                        <div>
+                            <p className="font-semibold text-gray-800">Input Patient Service</p>
+                            <p className="text-sm text-gray-400">Add services to patient bill</p>
+                        </div>
+                    </div>
                 </div>
-                <div className="mt-5 p-6">
-                  <div className="text-center bg-blue-[900] border border-gray-300 rounded-lg py-5 text-lg font-semibold mt-[1em] hover:text-indigo-700 hover:bg-[#E5E4E2]   ">
-                    <button
-                      onClick={() =>
-                        navigate(`/doctor/input`)
-                      }
-                    >
-                      Click here to input service
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="w-30 mt-[5em] md:w-60 ">
-                <img src={hospital} alt="this is hospital logo" />
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
+        </StaffLayout>
     </>
   );
 }
