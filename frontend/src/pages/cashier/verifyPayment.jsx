@@ -30,6 +30,7 @@ function VerifyPayment() {
         try {
             const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/bills`);
             const data = await res.json();
+            console.log("Bills data:", data);
             setBills(Array.isArray(data) ? data : []);
         } catch (err) {
             setError(err.message);
