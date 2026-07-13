@@ -51,7 +51,7 @@ function ReceptionistDashboard() {
                     className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all hover:border-purple-200"
                 >
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-2xl">➕</div>
+                        <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-2xl"><img className="w-8" src={add} alt="" /></div>
                         <div>
                             <p className="font-semibold text-gray-800">Register New Patient</p>
                             <p className="text-sm text-gray-400">Create a new patient account</p>

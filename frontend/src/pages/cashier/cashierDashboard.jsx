@@ -55,7 +55,7 @@ function CashierDashboard() {
                     className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all hover:border-orange-200"
                 >
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-2xl">🧾</div>
+                        <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-2xl"><img className="w-8" src={bill} alt="" /></div>
                         <div>
                             <p className="font-semibold text-gray-800">Get Bill for Patient</p>
                             <p className="text-sm text-gray-400">Generate bill from doctor's service input</p>
@@ -68,7 +68,7 @@ function CashierDashboard() {
                     className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all hover:border-green-200"
                 >
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-2xl">✅</div>
+                        <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-2xl"><img className="w-8" src={verify} alt="" /></div>
                         <div>
                             <p className="font-semibold text-gray-800">Verify Payment Status</p>
                             <p className="text-sm text-gray-400">Mark bills as Paid</p>
