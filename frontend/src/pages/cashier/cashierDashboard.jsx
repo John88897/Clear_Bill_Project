@@ -7,6 +7,11 @@ import StaffLayout from "../../../layout/StaffLayout";
 import bill from "../../assets/bills.png";
 import home from "../../assets/hom.png";
 import verify from "../../assets/verify.png";
+    const navItems = [
+        { to: '/cashier/dashboard', icon: home, label: 'Dashboard' },
+        { to: '/cashier/create', icon: bill, label: 'Create Bill' },
+        { to: '/cashier/verifyPayment', icon: verify, label: 'Verify Payment' },
+    ];
 function CashierDashboard() {
     const [cashier, setCashier] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -34,11 +39,7 @@ function CashierDashboard() {
                 setLoading(false);
             });
     }, []);
-    const navItems = [
-        { to: '/cashier/dashboard', icon: home, label: 'Dashboard' },
-        { to: '/cashier/create', icon: bill, label: 'Create Bill' },
-        { to: '/cashier/verifyPayment', icon: verify, label: 'Verify Payment' },
-    ];
+ 
 
     if (loading) return <StaffLayout role="Cashier" navItems={navItems}><p>Loading...</p></StaffLayout>;
     if (error) return <StaffLayout role="Cashier" navItems={navItems}><p className="text-red-500">Error: {error}</p></StaffLayout>;

@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../src/assets/logo.png';
 import logout from '../src/assets/logout.png'; 
 
-function StaffLayout({children, role, navItem}) {
+function StaffLayout({children, role, navItems = []}) {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -44,7 +44,7 @@ function StaffLayout({children, role, navItem}) {
                 </div>
                 {/* Nav Items */}
                 <nav className="flex flex-col gap-1 flex-1">
-                    {navItem.map((item) => (
+                    {navItems.map((item) => (
                         <NavLink
                             key={item.to}
                             to={item.to}

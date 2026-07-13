@@ -6,6 +6,10 @@ import StaffLayout from "../../../layout/StaffLayout";
 import home from '../../assets/hom.png';
 import add from '../../assets/add.png'
 
+ const navItems = [
+        { to: '/receptionist/dashboard', icon: home, label: 'Dashboard' },
+        { to: '/receptionist/register', icon: add, label: 'Register Patient' },
+    ];
 function ReceptionistDashboard() {
     const [receptionist, setReceptionist] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -32,10 +36,7 @@ function ReceptionistDashboard() {
                 setLoading(false);
             });
     }, []);
-     const navItems = [
-        { to: '/receptionist/dashboard', icon: home, label: 'Dashboard' },
-        { to: '/receptionist/register', icon: add, label: 'Register Patient' },
-    ];
+     
      if (loading) return <StaffLayout role="Receptionist" navItems={navItems}><p>Loading...</p></StaffLayout>;
     if (error) return <StaffLayout role="Receptionist" navItems={navItems}><p className="text-red-500">Error: {error}</p></StaffLayout>;
 

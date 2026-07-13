@@ -7,6 +7,10 @@ import StaffLayout from "../../../layout/StaffLayout";
 import home from '../../assets/hom.png';
 import service from '../../assets/service.png';
 
+ const navItems = [
+        { to: '/doctor/dashboard', icon: home, label: 'Dashboard' },
+        { to: '/doctor/input', icon: service, label: 'Input Service' },
+    ];
 
 function DoctorDashboard() {
   const [userDoctor, setDoctor] = useState(null);
@@ -38,11 +42,7 @@ function DoctorDashboard() {
         setLoading(false);
       });
   }, []);
-  const navItems = [
-        { to: '/doctor/dashboard', icon: home, label: 'Dashboard' },
-        { to: '/doctor/input', icon: service, label: 'Input Service' },
-    ];
-
+  
     if (loading) return <StaffLayout role="Doctor" navItems={navItems}><p>Loading...</p></StaffLayout>;
     if (error) return <StaffLayout role="Doctor" navItems={navItems}><p className="text-red-500">Error: {error}</p></StaffLayout>;
 
