@@ -1,10 +1,10 @@
-import {NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../src/assets/logo.png';
 import home from '../src/assets/hom.png';
 import user from '../src/assets/user.png';
-import report from '../src/assets/report.png'; 
-import logout from '../src/assets/logout.png'; 
-function AdminLayout({children}) {
+import report from '../src/assets/report.png';
+import logout from '../src/assets/logout.png';
+function AdminLayout({ children }) {
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -13,12 +13,12 @@ function AdminLayout({children}) {
     };
 
     const navItems = [
-        {to: '/admin/dashboard', label: 'Dashboard', icon: home},
-        {to: '/admin/users', label: 'Users', icon: user},
-        {to: '/admin/reports', label: 'Reports', icon: report},
+        { to: '/admin/dashboard', label: 'Dashboard', icon: home },
+        { to: '/admin/users', label: 'Users', icon: user },
+        { to: '/admin/reports', label: 'Reports', icon: report },
     ];
 
-   return (
+    return (
         <div className="flex min-h-screen">
             {/* Sidebar */}
             <div className="w-52 bg-white border-r border-gray-200 flex flex-col p-4 fixed h-full">
@@ -43,7 +43,7 @@ function AdminLayout({children}) {
                                     : 'text-gray-500 hover:bg-gray-100'}`
                             }
                         >
-<img src={item.icon} className="w-5 h-5" alt="" />                            {item.label}
+                            <img src={item.icon} className="w-5 h-5" alt="" />                            {item.label}
                         </NavLink>
                     ))}
                 </nav>

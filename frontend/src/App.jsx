@@ -37,22 +37,19 @@ function App() {
         </Route>
 
         {/* receptionist route*/}
-        <Route element={<RootLayout />}>
+        
           <Route path='/receptionist/dashboard' element={<ReceptionistDashboard />}></Route>
           <Route path='/receptionist/register' element={<RegisterPatient />}></Route>
-        </Route>
         {/* Doctor route*/}
-        <Route element={<RootLayout />}>
+        
           <Route path='/doctor/dashboard' element={<DoctorDashboard />}></Route>
           <Route path='/doctor/input' element={< InputService/>}></Route>
-        </Route>
 
          {/* cashier route*/}
-        <Route element={<RootLayout />}>
+        
           <Route path='/cashier/dashboard' element={<CashierDashboard />}></Route>
           <Route path='/cashier/create' element={<CreateBill/>}></Route>
           <Route path='/cashier/verifyPayment' element={<VerifyPayment/>}></Route>
-        </Route>
 
         {/* admin route */}
         <Route path='/admin/dashboard' element={<AdminDashboard />} />
