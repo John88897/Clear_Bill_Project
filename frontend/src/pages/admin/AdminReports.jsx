@@ -4,7 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { authFetch } from "../../utils/authFetch";
 
 function AdminRevenue() {
-    const [startDate, setStartDate] = useState("2026-01-01");
+    const [startDate, setStartDate] = useState("2024-01-01");
     const [endDate, setEndDate] = useState("2026-12-31");
     const [report, setReport] = useState(null);
     const [loading, setLoading] = useState(false);
