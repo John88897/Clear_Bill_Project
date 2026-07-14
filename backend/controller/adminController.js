@@ -77,44 +77,52 @@ exports.createUser = async (req, res) => {
     }
 };
 
-exports.getRevenueReport = async (req, res) =>{
+exports.getRevenueReport = async (req, res) => {
     try {
-        const {startDate, endDate} =req.query;
-        const {Op} = require("sequelize");
+        const { startDate, endDate } = req.query;
+        const { Op, literal } = require("sequelize");
+
+        // Add end of day time to endDate to include all payments on that day
+        const endDateFull = `${endDate} 23:59:59`;
+        const startDateFull = `${startDate} 00:00:00`;
 
         const payments = await Payment.findAll({
             where: {
                 payment_date: {
-                    [Op.between]: [startDate, endDate]
+                    [Op.between]: [startDateFull, endDateFull]
                 }
             },
             include: [{
                 model: Bill,
                 include: [{
                     model: Patient,
-                    include: [{model: User, attributes: ["name"]}]
+                    include: [{ model: User, attributes: ["name"] }]
                 }],
             }],
             order: [["payment_date", "ASC"]]
         });
 
+        console.log("Payments found:", payments.length);
+        console.log("Date range:", startDateFull, "to", endDateFull);
+
         const totalRevenue = payments.reduce((sum, p) => sum + Number(p.amount), 0);
         const totalPayments = payments.length;
 
         const revenueByDate = {};
-            payments.forEach(p => {
-                const date = p.payment_date.toISOString().split("T")[0];
-                    revenueByDate[date] = (revenueByDate[date] || 0) + Number(p.amount);
-            });
+        payments.forEach(p => {
+            const date = new Date(p.payment_date).toISOString().split("T")[0];
+            revenueByDate[date] = (revenueByDate[date] || 0) + Number(p.amount);
+        });
 
-            const chartData  = Object.entries(revenueByDate).map(([date, amount]) => ({
-                date,
-                amount
-            }));
+        const chartData = Object.entries(revenueByDate).map(([date, amount]) => ({
+            date,
+            amount
+        }));
 
-            res.json({ totalRevenue, totalPayments, chartData, payments});
-        } catch (error  ) {
+        res.json({ totalRevenue, totalPayments, chartData, payments });
+
+    } catch (error) {
         console.log(error);
-        res.status(500).json({message: error.message});
+        res.status(500).json({ message: error.message });
     }
 };
