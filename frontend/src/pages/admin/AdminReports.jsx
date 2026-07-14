@@ -73,7 +73,7 @@ function AdminRevenue() {
                         </div>
                         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                             <p className="text-xs text-gray-400 mb-1">Total Payments</p>
-                            <p className="text-2xl font-bold text-cyan-600">{report.totalPayments}<p/>                        </p>
+                            <p className="text-2xl font-bold text-cyan-600">{report.totalPayments}</p>       
                         </div>
                         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                             <p className="text-xs text-gray-400 mb-1">Avg per Payment</p>

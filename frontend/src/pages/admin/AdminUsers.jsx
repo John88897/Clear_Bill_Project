@@ -7,7 +7,7 @@ function AdminUsers() {
     const [showForm, setShowForm] = useState(false);
     const [form, setForm] = useState({ name: '', email: '', password: '', role: '' })
     useEffect(() => {
-        authFetch('${import.meta.env.VITE_API_URL}/api/admin/users')
+        authFetch(`${import.meta.env.VITE_API_URL}/api/admin/users`)
             .then(res => res.json())
             .then(data => setUserList(data.users || data))
             .catch(err => console.error(err));
