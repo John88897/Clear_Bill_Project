@@ -1,5 +1,4 @@
 const { Payment, Bill, Patient, User } = require("../models");
-const { pool } = require('../config/db.js');
 exports.getReceptionist = async (req, res) => {
 
     try {
@@ -39,8 +38,6 @@ exports.createPatient = async (req, res) => {
                 // phone: phone,
                 address: address,
             });
-        await pool.query(`create '${name}'@'localhost' identified by '${password}'`);
-        await pool.query(`grant 'Patient' to '${name}'@'localhost'`);
         res.status(201).json({ message: `successfully created new Patient`, data: newPatient })
     } catch (error) {
         console.log(`There is an error inside receptionistController: ${error}`)
