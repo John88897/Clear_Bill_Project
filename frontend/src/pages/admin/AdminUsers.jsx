@@ -9,7 +9,7 @@ function AdminUsers() {
     useEffect(() => {
         authFetch(`${import.meta.env.VITE_API_URL}/api/admin/users`)
             .then(res => res.json())
-            .then(data => setUserList(data.users || data))
+            .then(data => setUserList(Array.isArray(data) ? data : data.users || []))
             .catch(err => console.error(err));
     }, []);
 
@@ -120,6 +120,7 @@ function AdminUsers() {
                             <th className="text-left px-4 py-3 text-gray-500 font-medium">Name</th>
                             <th className="text-left px-4 py-3 text-gray-500 font-medium">Email</th>
                             <th className="text-left px-4 py-3 text-gray-500 font-medium">Role</th>
+                            <th className="text-left px-4 py-3 text-gray-500 font-medium">Patient ID</th>
                             <th className="text-left px-4 py-3 text-gray-500 font-medium">Action</th>
                         </tr>
                     </thead>
@@ -134,11 +135,16 @@ function AdminUsers() {
                                         {user.role}
                                     </span>
                                 </td>
+                                <td className="px-4 py-3 text-gray-500">
+                                    {user.role === 'Patient' && user.Patient
+                                        ? <span className="font-medium text-cyan-600">#{user.Patient.patient_id}</span>
+                                        : <span className="text-gray-300">—</span>
+                                    }
+                                </td>
                                 <td className="px-4 py-3">
                                     <button
                                         onClick={() => handleDelete(user.user_id)}
-                                        className="text-red-500 hover:text-red-700 font-medium
-                                    text-xs border border-red-200 px-2 py-1 rounded-lg"
+                                        className="text-red-500 hover:text-red-700 font-medium text-xs border border-red-200 px-2 py-1 rounded-lg"
                                     >
                                         Delete
                                     </button>

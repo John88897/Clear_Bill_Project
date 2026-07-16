@@ -27,7 +27,12 @@ exports.getDashboard = async (req, res) => {
 exports.getUsers = async (req, res) => {
     try {
         const users = await User.findAll({
-            attributes: ["user_id", "name", "email", "role"]
+            attributes: ["user_id", "name", "email", "role"],
+            include: [{
+                model: Patient,
+                attributes: ["patient_id"],
+                required: false  // LEFT JOIN so non-patients still show
+            }]
         });
         res.json(users);
     } catch (error) {
