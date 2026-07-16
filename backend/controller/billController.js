@@ -1,5 +1,5 @@
 
-const { Bill, Patient, BillDetail, Service, User } = require("../models");
+const { Bill, Patient, BillDetail, Service, User, Payment } = require("../models");
 
 async function findBillById(billId) {
   const bill = await Bill.findOne({
@@ -91,7 +91,14 @@ exports.updateBillStatus = async (req, res) => {
     // Update and save
     bill.status = status;
     await bill.save();
-
+    if (status === "Paid") {
+      await Payment.create({
+        bill_id: bill.bill_id,
+        amount: bill.total_amount,
+        payment_method: req.body.payment_method || "Cash",
+        payment_date: new Date().toISOString().split("T")[0],
+      });
+    }
     res.json({ 
       message: `Bill #${id} successfully marked as ${status}`, 
       bill 

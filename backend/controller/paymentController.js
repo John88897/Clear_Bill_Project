@@ -14,7 +14,7 @@ exports.getPayments = async (req, res) => {
         const payments = await Payment.findAll({
             include: [{
                 model: Bill,
-                where: { patient_id: patient_id }
+                where: { patient_id: patient.patient_id }
             }],
             order: [["payment_date", "DESC"]]
         });
