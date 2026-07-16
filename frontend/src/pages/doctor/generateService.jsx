@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { authFetch } from "../../utils/authFetch";
 import StaffLayout from "../../../layout/StaffLayout";
 import home from '../../assets/hom.png';
@@ -29,7 +29,6 @@ function InputService() {
     }, []);
 
     useEffect(() => {
-        if (!serviceId) { setServiceInfo(null); return; }
         async function showService() {
             try {
                 const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/services/${serviceId}`);
@@ -40,6 +39,7 @@ function InputService() {
         }
         showService();
     }, [serviceId]);
+    if (!serviceId) { setServiceInfo(null); return; }
 
     async function handleInputService() {
         if (!patientId || !serviceId || !amountOfService) {
